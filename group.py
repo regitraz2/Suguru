@@ -17,7 +17,7 @@ class Group:
 	def colorGroupError(self):
 		for x in self.__list:
 			for y in self.__list:
-				if x.getNum() == y.getNum() and x != y:
+				if x != y and x.getNum() == y.getNum():
 					x.bgRed()
 					y.bgRed()
 

@@ -1,6 +1,6 @@
 from tkinter import *
 
-#test
+
 class Example(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)

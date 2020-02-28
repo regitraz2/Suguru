@@ -19,7 +19,7 @@ class Case:
 
 
 	def bgRed(self):
-		self.btn.configure(bg="IndianRed1")
+		self.btn.configure(bg="#ff5c5c")
 
 	def bgLightGray(self):
 		self.btn.configure(bg="lightgray")
@@ -35,3 +35,5 @@ class Case:
 		self.__nom = nom
 	def getNom(self):
 		return self.__nom
+	def getEstModif(self):
+		return self.__estModifiable

@@ -30,7 +30,7 @@ class Case:
 		if num > 0 and self.__estModifiable is False: #tests sur la case (la verification du chiffre se fait dans les groupes)
 			self.__num.set(num)
 	def getNum(self):
-		return self.__num
+		return self.__num.get()
 	def setNom(self, nom):
 		self.__nom = nom
 	def getNom(self):

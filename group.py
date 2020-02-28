@@ -1,5 +1,3 @@
-from case import Case
-
 class Group:
 	def __init__(self, nom):
 		self.__nom = nom
@@ -17,7 +15,8 @@ class Group:
 	def colorGroupError(self):
 		for x in self.__list:
 			for y in self.__list:
-				if x != y and x.getNum() == y.getNum():
+				# "" est la valeur quand num n'est pas definie (cf setNum dans la classe case)
+				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():
 					x.bgRed()
 					y.bgRed()
 

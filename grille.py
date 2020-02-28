@@ -107,25 +107,26 @@ class Grille:
 		for i in range(self.__n):
 			for j in range(self.__n):
 				#teste les 4 case a coté de celle au rang [i][j] et les colore si elles ont le meme numero
-				if i+1 < self.__n:
-					if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
-						self.__matrice[i][j].bgRed()
-						self.__matrice[i+1][j].bgRed()
+				if self.__matrice[i][j].getNum() != "":
+					if i+1 < self.__n:
+						if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
+							self.__matrice[i][j].bgRed()
+							self.__matrice[i+1][j].bgRed()
 
-				if j+1 < self.__n :
-					if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
-						self.__matrice[i][j].bgRed()
-						self.__matrice[i][j+1].bgRed()
+					if j+1 < self.__n :
+						if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
+							self.__matrice[i][j].bgRed()
+							self.__matrice[i][j+1].bgRed()
 
-				if i-1 >= 0 :
-					if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
-						self.__matrice[i][j].bgRed()
-						self.__matrice[i-1][j].bgRed()
+					if i-1 >= 0 :
+						if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
+							self.__matrice[i][j].bgRed()
+							self.__matrice[i-1][j].bgRed()
 
-				if j-1 >= 0 :
-					if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
-						self.__matrice[i][j].bgRed()
-						self.__matrice[i][j-1].bgRed()
+					if j-1 >= 0 :
+						if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
+							self.__matrice[i][j].bgRed()
+							self.__matrice[i][j-1].bgRed()
 
 
 	def addInGroup(self, case, numGrp):

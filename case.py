@@ -13,17 +13,30 @@ class Case:
 
 		#deux bouton differents selon si il est modifiable ou non
 		if self.__estModifiable:
-			self.btn = Button(frame, textvariable = self.__num, height = 2, width = 5, relief = "ridge", bg= "lightgray")
+			self.btn = Button(frame, textvariable = self.__num, height = 2, width = 5, relief = "ridge", bg= "lightgray", command=self.load_change_grid)
 		else:
 			self.btn = Button(frame, textvariable = self.__num, height = 2, width = 5, relief = "ridge", bg="gray70", state=DISABLED, disabledforeground="black")
 
-
+	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
 
 	def bgLightGray(self):
 		self.btn.configure(bg="lightgray")
 
+	#affiche les boutons pour changer la valeur d'un bouton
+	def load_change_grid(self):
+		frame = Frame()
+		Button(frame, text="1", width=5, height=2, command=lambda :self.setNum(1)).grid(row=0, column=0)
+		Button(frame, text="2", width=5, height=2, command=lambda :self.setNum(2)).grid(row=0, column=1)
+		Button(frame, text="3", width=5, height=2, command=lambda :self.setNum(3)).grid(row=0, column=2)
+		Button(frame, text="4", width=5, height=2, command=lambda :self.setNum(4)).grid(row=1, column=0)
+		Button(frame, text="5", width=5, height=2, command=lambda :self.setNum(5)).grid(row=1, column=1)
+		Button(frame, text="6", width=5, height=2, command=lambda :self.setNum(6)).grid(row=1, column=2)
+		Button(frame, text="7", width=5, height=2, command=lambda :self.setNum(7)).grid(row=2, column=0)
+		Button(frame, text="8", width=5, height=2, command=lambda :self.setNum(8)).grid(row=2, column=1)
+		Button(frame, text="9", width=5, height=2, command=lambda :self.setNum(9)).grid(row=2, column=2)
+		frame.place(relx=0.35, rely=0.75)
 
 	#Méthodes d'accès
 	def setNum(self, num):

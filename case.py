@@ -1,5 +1,5 @@
 from tkinter import *
-
+import time
 
 class Case:
 	def __init__(self, frame, nom, num, estModifiable, i, j):
@@ -26,17 +26,17 @@ class Case:
 
 	#affiche les boutons pour changer la valeur d'un bouton
 	def load_change_grid(self):
-		frame = Frame()
-		Button(frame, text="1", width=5, height=2, command=lambda :self.setNum(1)).grid(row=0, column=0)
-		Button(frame, text="2", width=5, height=2, command=lambda :self.setNum(2)).grid(row=0, column=1)
-		Button(frame, text="3", width=5, height=2, command=lambda :self.setNum(3)).grid(row=0, column=2)
-		Button(frame, text="4", width=5, height=2, command=lambda :self.setNum(4)).grid(row=1, column=0)
-		Button(frame, text="5", width=5, height=2, command=lambda :self.setNum(5)).grid(row=1, column=1)
-		Button(frame, text="6", width=5, height=2, command=lambda :self.setNum(6)).grid(row=1, column=2)
-		Button(frame, text="7", width=5, height=2, command=lambda :self.setNum(7)).grid(row=2, column=0)
-		Button(frame, text="8", width=5, height=2, command=lambda :self.setNum(8)).grid(row=2, column=1)
-		Button(frame, text="9", width=5, height=2, command=lambda :self.setNum(9)).grid(row=2, column=2)
-		frame.place(relx=0.35, rely=0.75)
+		self.frame2 = Frame()
+		Button(self.frame2, text="1", width=5, height=2, command=lambda :self.setNum(1)).grid(row=0, column=0)
+		Button(self.frame2, text="2", width=5, height=2, command=lambda :self.setNum(2)).grid(row=0, column=1)
+		Button(self.frame2, text="3", width=5, height=2, command=lambda :self.setNum(3)).grid(row=0, column=2)
+		Button(self.frame2, text="4", width=5, height=2, command=lambda :self.setNum(4)).grid(row=1, column=0)
+		Button(self.frame2, text="5", width=5, height=2, command=lambda :self.setNum(5)).grid(row=1, column=1)
+		Button(self.frame2, text="6", width=5, height=2, command=lambda :self.setNum(6)).grid(row=1, column=2)
+		Button(self.frame2, text="7", width=5, height=2, command=lambda :self.setNum(7)).grid(row=2, column=0)
+		Button(self.frame2, text="8", width=5, height=2, command=lambda :self.setNum(8)).grid(row=2, column=1)
+		Button(self.frame2, text="9", width=5, height=2, command=lambda :self.setNum(9)).grid(row=2, column=2)
+		self.frame2.place(relx=0.35, rely=0.75)
 
 	#Méthodes d'accès
 	def setNum(self, num):

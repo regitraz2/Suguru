@@ -8,9 +8,10 @@ class Grille:
 	def __init__(self, window):
 		#attributs
 		self.__window = window
-		self.__n = 0
-		self.__matrice = []
-		self.__list_group = []
+		self.__n = 0 #taille de la grille
+		self.selected = None #case selectionnée
+		self.__matrice = [] #matrices des cases
+		self.__list_group = [] #liste des groupe
 
 		self.create_frame()
 
@@ -21,10 +22,12 @@ class Grille:
 
 	#constructeur grille a partir d'un fichier de config
 	def __init__(self, window, cfg):
+		#attributs
 		self.__window = window
-		self.__n = 0
-		self.__matrice = []
-		self.__list_group = []
+		self.__n = 0 #taille de la grille
+		self.selected = None #case selectionnée
+		self.__matrice = [] #matrices des cases
+		self.__list_group = [] #liste des groupe
 
 		self.create_frame()
 
@@ -127,6 +130,21 @@ class Grille:
 						if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
 							self.__matrice[i][j].bgRed()
 							self.__matrice[i][j-1].bgRed()
+
+
+	#affiche les boutons pour changer la valeur d'un bouton
+	def load_change_grid(self):
+		self.frame2 = Frame()
+		Button(self.frame2, text="1", width=5, height=2, command="").grid(row=0, column=0)
+		Button(self.frame2, text="2", width=5, height=2, command="").grid(row=0, column=1)
+		Button(self.frame2, text="3", width=5, height=2, command="").grid(row=0, column=2)
+		Button(self.frame2, text="4", width=5, height=2, command="").grid(row=1, column=0)
+		Button(self.frame2, text="5", width=5, height=2, command="").grid(row=1, column=1)
+		Button(self.frame2, text="6", width=5, height=2, command="").grid(row=1, column=2)
+		Button(self.frame2, text="7", width=5, height=2, command="").grid(row=2, column=0)
+		Button(self.frame2, text="8", width=5, height=2, command="").grid(row=2, column=1)
+		Button(self.frame2, text="9", width=5, height=2, command="").grid(row=2, column=2)
+		self.frame2.place(relx=0.35, rely=0.75)
 
 
 	def addInGroup(self, case, numGrp):

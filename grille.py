@@ -9,7 +9,7 @@ class Grille:
 		#attributs
 		self.__window = window
 		self.__n = 0 #taille de la grille
-		self.selected = None #case selectionnée
+		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
 
@@ -19,13 +19,12 @@ class Grille:
 
 		self.pack_frame()
 
-
 	#constructeur grille a partir d'un fichier de config
 	def __init__(self, window, cfg):
 		#attributs
 		self.__window = window
 		self.__n = 0 #taille de la grille
-		self.selected = None #case selectionnée
+		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
 
@@ -34,6 +33,8 @@ class Grille:
 		self.load_config(cfg) #charge la grille selectionné dans les options
 
 		self.pack_frame() #l'affiche
+
+		self.load_change_grid()
 
 
 	#charge une grille a partir d'un fichier de config
@@ -85,14 +86,21 @@ class Grille:
 				numGrp = int(grid[i][j][2]) #numero du groupe
 
 				if num > 0:
-					estModifiable = False
+					estModifiable = False # on est dans une config préchargé, alors on ne veut pas modifier les case qui on un numero
 				else:
 					estModifiable = True
+					num = "" #pas de numero pour les autres cases
 
 				# creation de la case
-				case = Case(self.__frame, "btn{}{}".format(i, j), num, estModifiable, i, j)
-				sgrid.append(case) #on la met dans la ligne
-				case.btn.grid(row=i, column=j) #placement de la case
+				case = Case(self.__frame, "btn{}{}".format(i, j), num, estModifiable, i, j, self)
+
+				# on ajoute la case dans la ligne
+				sgrid.append(case)
+
+				# placement de la case
+				case.btn.grid(row=i, column=j)
+
+				#on met la case dans son groupe
 				self.addInGroup(case, numGrp)
 
 			self.__matrice.append(sgrid) #ajout de la ligne dans la grille
@@ -135,15 +143,12 @@ class Grille:
 	#affiche les boutons pour changer la valeur d'un bouton
 	def load_change_grid(self):
 		self.frame2 = Frame()
-		Button(self.frame2, text="1", width=5, height=2, command="").grid(row=0, column=0)
-		Button(self.frame2, text="2", width=5, height=2, command="").grid(row=0, column=1)
-		Button(self.frame2, text="3", width=5, height=2, command="").grid(row=0, column=2)
-		Button(self.frame2, text="4", width=5, height=2, command="").grid(row=1, column=0)
-		Button(self.frame2, text="5", width=5, height=2, command="").grid(row=1, column=1)
-		Button(self.frame2, text="6", width=5, height=2, command="").grid(row=1, column=2)
-		Button(self.frame2, text="7", width=5, height=2, command="").grid(row=2, column=0)
-		Button(self.frame2, text="8", width=5, height=2, command="").grid(row=2, column=1)
-		Button(self.frame2, text="9", width=5, height=2, command="").grid(row=2, column=2)
+		k = 0 #s'incremente jusqu'a 9
+		for i in range(3):
+			for j in range(3):
+				k += 1
+				Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
+
 		self.frame2.place(relx=0.35, rely=0.75)
 
 
@@ -161,6 +166,22 @@ class Grille:
 		grp.ajout(case)
 		self.__list_group.append(grp)
 
+
+	def setSelected(self, obj):
+		try: #si une case est deja selectionnée, remet sa couleur a la normale
+			self.__selected.bgLightGray()
+		except:
+			pass
+		self.__selected = obj #selectionne la case
+		self.__selected.bgYellow() #met la couleur a jaune
+
+
+	def getGrp(self, case):
+		for x in self.__list_group:
+			for y in x:
+				if y.getNom() == case.getNom():
+					return x
+		return False
 
 	#créer une frame
 	def create_frame(self) :

@@ -1,8 +1,10 @@
 class Group:
 	def __init__(self, nom):
+		#attributs
 		self.__nom = nom
 		self.__list = []
 		self.__nbelem = 0
+		self.__estValide = False #dit si un groupe est correctement remplit
 
 
 	#ajoute un element et increment le nombre d'elements
@@ -13,12 +15,16 @@ class Group:
 
 	#colore les doublons d'un nombre dans le groupe
 	def colorGroupError(self):
+		res = True #sert a determiner la victoire
 		for x in self.__list:
 			for y in self.__list:
-				# "" est la valeur quand num n'est pas definie (cf setNum dans la classe case)
+				# "" est la valeur quand num n'est pas defini (cf setNum dans la classe case)
 				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():
-					x.bgRed()
-					y.bgRed()
+					x.bgOrange()
+					y.bgOrange()
+					if res is not False:
+						res = False
+		return res
 
 
 	#méthodes d'accés

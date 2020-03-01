@@ -70,6 +70,18 @@ class Fenetre :
 		except:
 			pass
 
+		#detruit le message de victoire si il existe
+		try:
+			self.grille.frame_vict.destroy()
+		except:
+			pass
+
+		#detruit la frame permettant de modifier les valeurs si elle existe (le pad en bah de la grille)
+		try:
+			self.grille.frame2.destroy()
+		except:
+			pass
+
 		self.create_menu()
 		self.pack_frame() #affiche la frame/le menu
 

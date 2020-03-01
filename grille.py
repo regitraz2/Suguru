@@ -19,6 +19,7 @@ class Grille:
 
 		self.pack_frame()
 
+
 	#constructeur grille a partir d'un fichier de config
 	def __init__(self, window, cfg):
 		#attributs
@@ -86,7 +87,7 @@ class Grille:
 				numGrp = int(grid[i][j][2]) #numero du groupe
 
 				if num > 0:
-					estModifiable = False # on est dans une config préchargé, alors on ne veut pas modifier les case qui on un numero
+					estModifiable = False # on est dans une config précréer, alors on ne veut pas modifier les case qui on un numero
 				else:
 					estModifiable = True
 					num = "" #pas de numero pour les autres cases
@@ -108,11 +109,31 @@ class Grille:
 		self.colorError() #colore en rouge les nombres identique et cote a cote
 
 
+
 	#colore en rouge les nombres identique et cote a cote et les doublon dans un groupe
+	#de plus renvoie vrai si il n'y a aucune erreurs (cf victoire)
 	def colorError(self):
+		#reinitialise les couleurs avant de recolorier les erreurs
+		for i in range(self.__n):
+			for j in range(self.__n):
+				if self.__matrice[i][j] == self.__selected: #on ne change pas le bg de la case selectionnée
+					self.__matrice[i][j].bgYellow()
+				else:#sinon on met la couleur de base de la case
+					if self.__matrice[i][j].getEstModif():
+						self.__matrice[i][j].bgLightGray()
+					else:
+						self.__matrice[i][j].bgGray()
+				#deux couleur differente selon si la case est modifiable ou non
+
+		res = True# res sert a determiner la victoire
+
 		#pour les groupes
 		for i in self.__list_group:
-			i.colorGroupError()
+			# si res est a faux alors on y touche plus mais on termine le coloriage
+			if res is not False:
+				res = i.colorGroupError()
+			else:
+				i.colorGroupError()
 
 		#pour les cases cote a cote
 		for i in range(self.__n):
@@ -123,33 +144,41 @@ class Grille:
 						if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
 							self.__matrice[i][j].bgRed()
 							self.__matrice[i+1][j].bgRed()
+							if res is not False:
+								res = False
 
 					if j+1 < self.__n :
 						if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
 							self.__matrice[i][j].bgRed()
 							self.__matrice[i][j+1].bgRed()
+							if res is not False:
+								res = False
 
 					if i-1 >= 0 :
 						if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
 							self.__matrice[i][j].bgRed()
 							self.__matrice[i-1][j].bgRed()
+							if res is not False:
+								res = False
 
 					if j-1 >= 0 :
 						if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
 							self.__matrice[i][j].bgRed()
 							self.__matrice[i][j-1].bgRed()
-
+							if res is not False:
+								res = False
+		return res
 
 	#affiche les boutons pour changer la valeur d'un bouton
 	def load_change_grid(self):
-		self.frame2 = Frame()
+		self.frame2 = Frame(self.__window)
 		k = 0 #s'incremente jusqu'a 9
 		for i in range(3):
 			for j in range(3):
 				k += 1
 				Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
 
-		self.frame2.place(relx=0.35, rely=0.75)
+		self.frame2.place(relx=0.5, rely=0.85, anchor=CENTER)
 
 
 	def addInGroup(self, case, numGrp):
@@ -168,20 +197,40 @@ class Grille:
 
 
 	def setSelected(self, obj):
-		try: #si une case est deja selectionnée, remet sa couleur a la normale
-			self.__selected.bgLightGray()
-		except:
-			pass
-		self.__selected = obj #selectionne la case
-		self.__selected.bgYellow() #met la couleur a jaune
+		if self.__selected is not obj:
+			try: #si une case est deja selectionnée, remet sa couleur a la normale
+				self.__selected.bgLightGray()
+			except:
+				pass
+			self.__selected = obj #selectionne la case
+			self.colorError()
+			self.__selected.bgYellow() #met la couleur a jaune
 
-
+	#renvoie le groupe dans lequel la case est
 	def getGrp(self, case):
 		for x in self.__list_group:
 			for y in x:
 				if y.getNom() == case.getNom():
 					return x
 		return False
+
+	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
+	def victory(self):
+		if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
+			self.frame_vict = Frame(self.__window)
+			Label(self.frame_vict, text = "VICTOIRE", font = ("Courrier", 40), fg="green").pack()
+			self.frame_vict.place(relx=0.5, rely=0.25, anchor=CENTER)
+		else:
+			return False
+
+	#renvoie vraie si toutes les cases sont remplies par un chiffre
+	def remplie(self):
+		for i in range(self.__n):
+			for j in range(self.__n):
+				if self.__matrice[i][j].getNum() == "":
+					return False
+		return True
+
 
 	#créer une frame
 	def create_frame(self) :

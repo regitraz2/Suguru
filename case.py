@@ -21,14 +21,18 @@ class Case:
 	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
+	def bgOrange(self):
+		self.btn.configure(bg="orange")
 	def bgYellow(self):
 		self.btn.configure(bg = "#fffa87")
 	def bgLightGray(self):
 		self.btn.configure(bg="lightgray")
+	def bgGray(self):
+		self.btn.configure(bg="gray70")
 
 	def changeVal(self, num):
 		self.setNum(num)
-		self.grille.colorError()
+		self.grille.victory()
 
 
 	#Méthodes d'accès

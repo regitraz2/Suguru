@@ -169,6 +169,7 @@ class Grille:
 							self.__matrice[i][j-1].bgRed()
 							if res is not False:
 								res = False
+					self.__matrice[i][j-1].drawBorder()
 		return res
 
 
@@ -187,40 +188,26 @@ class Grille:
 	#dessine les groupes
 	def drawGroups(self):
 		for i in range(self.__n):
+			#cf definition de drawBorder() de la classe case
 			for j in range(self.__n):
 				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
 					if i+1 < self.__n:#si on est dans la grille on fait le test
-						if self.__matrice[i][j].getGrp() != self.__matrice[i+1][j].getGrp():
-							self.__matrice[i][j].bbdr()
-						else:
-							self.__matrice[i][j].bdr()
-					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
-						self.__matrice[i][j].bbdr()
+						if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
+							self.__matrice[i][j].setBdr(0)
 
 					if i-1 >= 0:#si on est dans la grille
-						if self.__matrice[i][j].getGrp() != self.__matrice[i-1][j].getGrp():
-							self.__matrice[i][j].bbdl()
-						else:
-							self.__matrice[i][j].bdl()
-					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
-						self.__matrice[i][j].bbdl()
+						if self.__matrice[i][j].getGrp() == self.__matrice[i-1][j].getGrp():
+							self.__matrice[i][j].setBdl(0)
 
 					if j+1 < self.__n:#si on est dans la grille
-						if self.__matrice[i][j].getGrp() != self.__matrice[i][j+1].getGrp():
-							self.__matrice[i][j].bbdb()
-						else:
-							self.__matrice[i][j].bdb()
-					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
-						self.__matrice[i][j].bbdb()
+						if self.__matrice[i][j].getGrp() == self.__matrice[i][j+1].getGrp():
+							self.__matrice[i][j].setBdb(0)
 
 					if j-1 >= 0:#si on est dans la grille
-						if self.__matrice[i][j].getGrp() != self.__matrice[i][j-1].getGrp():
-							self.__matrice[i][j].bbdt()
-						else:
-							self.__matrice[i][j].bdt()
-					else :  # si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
-						self.__matrice[i][j].bbdt()
+						if self.__matrice[i][j].getGrp() == self.__matrice[i][j-1].getGrp():
+							self.__matrice[i][j].setBdt(0)
 
+					self.__matrice[i][j].drawBorder()
 
 	#ajoute une case dans un groupe
 	def addInGroup(self, case, numGrp):
@@ -248,7 +235,7 @@ class Grille:
 			except:
 				pass
 			self.__selected = obj #selectionne la case
-			self.colorError()
+			#self.colorError()
 			self.__selected.bgYellow() #met la couleur a jaune
 
 

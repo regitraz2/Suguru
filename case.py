@@ -13,13 +13,14 @@ class Case:
 		self.__posY = j
 		self.setNum(num)
 
-		# on créer le canvas
-		self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd=0) #on le grid dans la classe grille, idem pour la frame
 
 		#deux bouton differents selon si il est modifiable ou non
 		if self.__estModifiable:
+			# on créer le canvas puis le bouton dedans
+			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = 0, bg="lightgray") #on le grid dans la classe grille, idem pour la frame
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", bg= "lightgray", command=lambda :self.grille.setSelected(self))
 		else:
+			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = 0, bg="gray70") #on le grid dans la classe grille, idem pour la frame
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", bg="gray70", state=DISABLED, disabledforeground="black")
 
 		self.btn.place(relx = 0.5, rely = 0.5, anchor = CENTER)  #on centre le bouton dans le canvas
@@ -27,15 +28,21 @@ class Case:
 	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
+		self.canvas.config(bg="#ff5c5c")
 	def bgOrange(self):
+		self.canvas.config(bg="orange")
 		self.btn.configure(bg="orange")
 	def bgYellow(self):
 		self.btn.configure(bg = "#fffa87")
+		self.canvas.config(bg="#fffa87")
 	def bgLightGray(self):
+		self.canvas.config(bg="lightgray")
 		self.btn.configure(bg="lightgray")
 	def bgGray(self):
+		self.canvas.config(bg="gray70")
 		self.btn.configure(bg="gray70")
 	def bgBlue(self):
+		self.canvas.config(bg="lightblue")
 		self.btn.configure(bg="lightblue")
 
 
@@ -48,13 +55,13 @@ class Case:
 	#bbd = big border, ensuite il y a 4 direction : t = top, b = bottom, l = left et r = right
 	#dessine de grosse bordure (pour delimiter les groupes)
 	def bbdt(self) :
-		self.canvas.create_line(0, 4, 58, 4, width = 8)
+		self.canvas.create_line(0, 4, 58, 4, width = 5)
 	def bbdb(self) :
-		self.canvas.create_line(0, 50, 58, 50, width = 8)
+		self.canvas.create_line(0, 50, 58, 50, width = 4)
 	def bbdr(self) :
-		self.canvas.create_line(54, 0, 54, 54, width = 8)
+		self.canvas.create_line(54, 0, 54, 54, width = 4)
 	def bbdl(self) :
-		self.canvas.create_line(4, 0, 4, 54, width = 8)
+		self.canvas.create_line(4, 0, 4, 54, width = 5)
 
 
 	#dessine des bordure normales (pour delimiter les cases)

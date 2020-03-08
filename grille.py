@@ -190,7 +190,7 @@ class Grille:
 			for j in range(self.__n):
 				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
 					if i+1 < self.__n:#si on est dans la grille on fait le test
-						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i+1][j].getGrp().getNom():
+						if self.__matrice[i][j].getGrp() != self.__matrice[i+1][j].getGrp():
 							self.__matrice[i][j].bbdr()
 						else:
 							self.__matrice[i][j].bdr()
@@ -198,7 +198,7 @@ class Grille:
 						self.__matrice[i][j].bbdr()
 
 					if i-1 >= 0:#si on est dans la grille
-						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i-1][j].getGrp().getNom():
+						if self.__matrice[i][j].getGrp() != self.__matrice[i-1][j].getGrp():
 							self.__matrice[i][j].bbdl()
 						else:
 							self.__matrice[i][j].bdl()
@@ -206,7 +206,7 @@ class Grille:
 						self.__matrice[i][j].bbdl()
 
 					if j+1 < self.__n:#si on est dans la grille
-						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i][j+1].getGrp().getNom():
+						if self.__matrice[i][j].getGrp() != self.__matrice[i][j+1].getGrp():
 							self.__matrice[i][j].bbdb()
 						else:
 							self.__matrice[i][j].bdb()
@@ -214,7 +214,7 @@ class Grille:
 						self.__matrice[i][j].bbdb()
 
 					if j-1 >= 0:#si on est dans la grille
-						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i][j-1].getGrp().getNom():
+						if self.__matrice[i][j].getGrp() != self.__matrice[i][j-1].getGrp():
 							self.__matrice[i][j].bbdt()
 						else:
 							self.__matrice[i][j].bdt()

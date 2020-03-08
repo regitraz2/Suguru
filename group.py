@@ -17,6 +17,10 @@ class Group:
 	def colorGroupError(self):
 		res = True #sert a determiner la victoire
 		for x in self.__list:
+			if x.getNum() > str(self.__nbelem): #si le numero est un chiffre dépassant le max du groupe
+				x.bgBlue()
+				if res is not False:
+					res = False
 			for y in self.__list:
 				# "" est la valeur quand num n'est pas defini (cf setNum dans la classe case)
 				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():

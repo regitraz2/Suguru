@@ -64,6 +64,8 @@ class Grille:
 
 		self.create_config(grid, n) #charge et place les widget
 
+		self.drawGroups()
+
 
 	#met la config choisie sous forme exploitable / enleve les caracteres inutiles / isoles les x:y (cf fichier de config)
 	def configFormat(self, lines, k, n):
@@ -99,7 +101,7 @@ class Grille:
 				sgrid.append(case)
 
 				# placement de la case
-				case.btn.grid(row=i, column=j)
+				case.canvas.grid(row=i, column=j)
 
 				#on met la case dans son groupe
 				self.addInGroup(case, numGrp)
@@ -169,6 +171,7 @@ class Grille:
 								res = False
 		return res
 
+
 	#affiche les boutons pour changer la valeur d'un bouton
 	def load_change_grid(self):
 		self.frame2 = Frame(self.__window)
@@ -181,6 +184,45 @@ class Grille:
 		self.frame2.place(relx=0.5, rely=0.85, anchor=CENTER)
 
 
+	#dessine les groupes
+	def drawGroups(self):
+		for i in range(self.__n):
+			for j in range(self.__n):
+				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
+					if i+1 < self.__n:#si on est dans la grille on fait le test
+						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i+1][j].getGrp().getNom():
+							self.__matrice[i][j].bbdr()
+						else:
+							self.__matrice[i][j].bdr()
+					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
+						self.__matrice[i][j].bbdr()
+
+					if i-1 >= 0:#si on est dans la grille
+						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i-1][j].getGrp().getNom():
+							self.__matrice[i][j].bbdl()
+						else:
+							self.__matrice[i][j].bdl()
+					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
+						self.__matrice[i][j].bbdl()
+
+					if j+1 < self.__n:#si on est dans la grille
+						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i][j+1].getGrp().getNom():
+							self.__matrice[i][j].bbdb()
+						else:
+							self.__matrice[i][j].bdb()
+					else:#si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
+						self.__matrice[i][j].bbdb()
+
+					if j-1 >= 0:#si on est dans la grille
+						if self.__matrice[i][j].getGrp().getNom() != self.__matrice[i][j-1].getGrp().getNom():
+							self.__matrice[i][j].bbdt()
+						else:
+							self.__matrice[i][j].bdt()
+					else :  # si on est en dehors on dessine une grosse bordure (fait le contour de la grille)
+						self.__matrice[i][j].bbdt()
+
+
+	#ajoute une case dans un groupe
 	def addInGroup(self, case, numGrp):
 		nom = "groupe{}".format(numGrp)
 
@@ -188,14 +230,17 @@ class Grille:
 		for x in self.__list_group:
 			if x.getNom() == nom:
 				x.ajout(case)
-				return
+				case.setGrp(x)
+				return #arrete la fonction
 
 		#crée un groupe, y ajoute la case et l'ajoute dans la liste des groupes
 		grp = Group(nom)
 		grp.ajout(case)
+		case.setGrp(grp)
 		self.__list_group.append(grp)
 
 
+	#modifie le parametre __selected de la classe grille
 	def setSelected(self, obj):
 		if self.__selected is not obj:
 			try: #si une case est deja selectionnée, remet sa couleur a la normale
@@ -206,13 +251,10 @@ class Grille:
 			self.colorError()
 			self.__selected.bgYellow() #met la couleur a jaune
 
+
 	#renvoie le groupe dans lequel la case est
 	def getGrp(self, case):
-		for x in self.__list_group:
-			for y in x:
-				if y.getNom() == case.getNom():
-					return x
-		return False
+		return case.getGrp()
 
 	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
 	def victory(self):
@@ -234,7 +276,7 @@ class Grille:
 
 	#créer une frame
 	def create_frame(self) :
-		self.__frame = Frame(self.__window)
+		self.__frame = Frame(self.__window, bd=0)
 
 
 	# empaquetage d'une frame

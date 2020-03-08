@@ -4,11 +4,15 @@ from grille import Grille
 
 class Btn():
     def __init__(self, parent):
-        frame = Frame(parent)
+        frame = Frame(parent, bd=0)
 
         #create canvas
-        self.canvas1 = Canvas(frame, relief = FLAT, bg="red", width = 54, height = 50)
-        self.canvas1.grid()
+        self.canvas1 = Canvas(frame, relief = FLAT, bg="red", width = 54, height = 50, bd=0)
+        self.canvas1.grid(row=0, column=0, padx=0, pady=0, ipadx=0, ipady=0)
+
+        #create canvas
+        self.canvas2 = Canvas(frame, relief = FLAT, bg="red", width = 54, height = 50)
+        self.canvas2.grid(row=0, column=1, padx=0, pady=0, ipadx=0, ipady=0)
 
         #insere le bouton dans le canvas
         self.btn = Button(self.canvas1, text = "1", command = self.draw, width=5, height=2, relief=FLAT)

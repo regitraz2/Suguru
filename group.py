@@ -21,6 +21,7 @@ class Group:
 				x.bgBlue()
 				if res is not False:
 					res = False
+
 			for y in self.__list:
 				# "" est la valeur quand num n'est pas defini (cf setNum dans la classe case)
 				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():

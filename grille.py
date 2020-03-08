@@ -97,19 +97,16 @@ class Grille:
 				# creation de la case
 				case = Case(self.__frame, "btn{}{}".format(i, j), num, estModifiable, i, j, self)
 
-				# on ajoute la case dans la ligne
-				sgrid.append(case)
-
 				# placement de la case
 				case.canvas.grid(row=i, column=j)
+
+				# on ajoute la case dans la ligne
+				sgrid.append(case)
 
 				#on met la case dans son groupe
 				self.addInGroup(case, numGrp)
 
 			self.__matrice.append(sgrid) #ajout de la ligne dans la grille
-
-		self.colorError() #colore en rouge les nombres identique et cote a cote
-
 
 
 	#colore en rouge les nombres identique et cote a cote et les doublon dans un groupe
@@ -127,12 +124,11 @@ class Grille:
 						self.__matrice[i][j].bgGray()
 				#deux couleur differente selon si la case est modifiable ou non
 
-		res = True# res sert a determiner la victoire
+		res = True # res sert a determiner la victoire
 
 		#pour les groupes
 		for i in self.__list_group:
-			# si res est a faux alors on y touche plus mais on termine le coloriage
-			if res is not False:
+			if res is not False: # si res est a faux alors on y touche plus mais on termine le coloriage
 				res = i.colorGroupError()
 			else:
 				i.colorGroupError()
@@ -187,27 +183,31 @@ class Grille:
 
 	#dessine les groupes
 	def drawGroups(self):
+		truc = []
 		for i in range(self.__n):
-			#cf definition de drawBorder() de la classe case
+			struc = []
 			for j in range(self.__n):
+				struc.append("{}{}".format(i, j))
 				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
 					if i+1 < self.__n:#si on est dans la grille on fait le test
 						if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
-							self.__matrice[i][j].setBdr(0)
+							self.__matrice[i][j].setBdb(0)
 
 					if i-1 >= 0:#si on est dans la grille
 						if self.__matrice[i][j].getGrp() == self.__matrice[i-1][j].getGrp():
-							self.__matrice[i][j].setBdl(0)
+							self.__matrice[i][j].setBdt(0)
 
 					if j+1 < self.__n:#si on est dans la grille
 						if self.__matrice[i][j].getGrp() == self.__matrice[i][j+1].getGrp():
-							self.__matrice[i][j].setBdb(0)
+							self.__matrice[i][j].setBdr(0)
 
 					if j-1 >= 0:#si on est dans la grille
 						if self.__matrice[i][j].getGrp() == self.__matrice[i][j-1].getGrp():
-							self.__matrice[i][j].setBdt(0)
+							self.__matrice[i][j].setBdl(0)
 
 					self.__matrice[i][j].drawBorder()
+			truc.append(struc)
+		print(truc)
 
 	#ajoute une case dans un groupe
 	def addInGroup(self, case, numGrp):
@@ -238,10 +238,6 @@ class Grille:
 			#self.colorError()
 			self.__selected.bgYellow() #met la couleur a jaune
 
-
-	#renvoie le groupe dans lequel la case est
-	def getGrp(self, case):
-		return case.getGrp()
 
 	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
 	def victory(self):

@@ -23,33 +23,38 @@ class Case:
 		#deux bouton differents selon si il est modifiable ou non
 		if self.__estModifiable:
 			# on créer le canvas (bd=-2 car le canvas Tkinter a un border a 2 par default) puis le bouton dedans
-			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2, bg="lightgray") #on le grid dans la classe grille, idem pour la frame
-			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", bg= "lightgray", command=lambda :self.grille.setSelected(self))
+			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2) #on le grid dans la classe grille, idem pour la frame
+			self.rect_id = self.canvas.create_rectangle(0, 0, 54, 50) #un rectangle sert de background car la propriété background du canvas efface les border
+			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", command=lambda :self.grille.setSelected(self))
+			self.bgLightGray()
 		else:
-			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2, bg="gray70") #on le grid dans la classe grille, idem pour la frame
-			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", bg="gray70", state=DISABLED, disabledforeground="black")
+			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2, bg="gray70") #on le grid dans la classe grille
+			self.rect_id = self.canvas.create_rectangle(0, 0, 54, 50) #un rectangle sert de background car la propriété background du canvas efface les border
+			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", state=DISABLED, disabledforeground="black")
+			self.bgGray()
 
 		self.btn.place(relx = 0.5, rely = 0.5, anchor = CENTER)  #on centre le bouton dans le canvas
 
 	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
-		self.canvas.config(bg="#ff5c5c")
+		self.canvas.itemconfigure(self.rect_id, fill="#ff5c5c")
 	def bgOrange(self):
-		self.canvas.config(bg="orange")
 		self.btn.configure(bg="orange")
+		self.canvas.itemconfigure(self.rect_id, fill="orange")
 	def bgYellow(self):
 		self.btn.configure(bg = "#fffa87")
-		self.canvas.config(bg="#fffa87")
+		self.canvas.itemconfigure(self.rect_id, fill="#fffa87")
+		print("r:{}, l:{}, t:{}, b:{}".format(self.__border_right, self.__border_left, self.__border_top, self.__border_bottom))
 	def bgLightGray(self):
-		self.canvas.config(bg="lightgray")
 		self.btn.configure(bg="lightgray")
+		self.canvas.itemconfigure(self.rect_id, fill="lightgray")
 	def bgGray(self):
-		self.canvas.config(bg="gray70")
 		self.btn.configure(bg="gray70")
+		self.canvas.itemconfigure(self.rect_id, fill="gray70")
 	def bgBlue(self):
-		self.canvas.config(bg="lightblue")
 		self.btn.configure(bg="lightblue")
+		self.canvas.itemconfigure(self.rect_id, fill="lightblue")
 
 
 	#modifie la valeur de num (celle qui est affiché sur le bouton)
@@ -93,13 +98,17 @@ class Case:
 
 	#dessine des bordure normales (pour delimiter les cases)
 	def bdt(self) :
-		self.canvas.create_line(0, 1, 54, 1, width = 2, fill="#cfcfcf")
+		pass
+		#self.canvas.create_line(0, 1, 54, 1, width = 2, fill="#cfcfcf")
 	def bdb(self) :
-		self.canvas.create_line(0, 49, 54, 49, width = 2, fill="#cfcfcf")
+		pass
+		#self.canvas.create_line(0, 49, 54, 49, width = 2, fill="#cfcfcf")
 	def bdr(self) :
-		self.canvas.create_line(53, 0, 53, 54, width = 2, fill="#cfcfcf")
+		pass
+		#self.canvas.create_line(53, 0, 53, 54, width = 2, fill="#cfcfcf")
 	def bdl(self) :
-		self.canvas.create_line(1, 0, 1, 54, width = 2, fill="#cfcfcf")
+		pass
+		#self.canvas.create_line(1, 0, 1, 54, width = 2, fill="#cfcfcf")
 
 
 	#Méthodes d'accès

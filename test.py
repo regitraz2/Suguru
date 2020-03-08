@@ -37,6 +37,7 @@ class Btn():
 
     def draw2(self):
         self.btn.configure(bg = "green")
+        self.canvas1.itemconfigure(self.canvas1, fill="green")
 
     def bbdt(self):
         self.canvas1.create_line(0, 2, 54, 2, width=5)

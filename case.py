@@ -45,7 +45,6 @@ class Case:
 	def bgYellow(self):
 		self.btn.configure(bg = "#fffa87")
 		self.canvas.itemconfigure(self.rect_id, fill="#fffa87")
-		print("r:{}, l:{}, t:{}, b:{}".format(self.__border_right, self.__border_left, self.__border_top, self.__border_bottom))
 	def bgLightGray(self):
 		self.btn.configure(bg="lightgray")
 		self.canvas.itemconfigure(self.rect_id, fill="lightgray")

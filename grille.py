@@ -183,11 +183,8 @@ class Grille:
 
 	#dessine les groupes
 	def drawGroups(self):
-		truc = []
 		for i in range(self.__n):
-			struc = []
 			for j in range(self.__n):
-				struc.append("{}{}".format(i, j))
 				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
 					if i+1 < self.__n:#si on est dans la grille on fait le test
 						if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
@@ -206,8 +203,6 @@ class Grille:
 							self.__matrice[i][j].setBdl(0)
 
 					self.__matrice[i][j].drawBorder()
-			truc.append(struc)
-		print(truc)
 
 	#ajoute une case dans un groupe
 	def addInGroup(self, case, numGrp):

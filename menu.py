@@ -10,13 +10,6 @@ class Menu:
 		self.load_menu()
 
 
-	def __del__(self):
-		try:
-			self.frame.destroy()
-		except:
-			pass
-
-
 	# créer une frame
 	def create_frame(self) :
 		self.frame = Frame(self.window, bg = 'forestgreen')
@@ -28,9 +21,6 @@ class Menu:
 
 	# affiche le menu
 	def load_menu(self) :
-		self.option = None
-		self.grille = None
-
 		self.create_frame()
 		self.create_menu()
 		self.pack_frame()  # affiche la frame/le menu
@@ -38,10 +28,7 @@ class Menu:
 	# affiche les options
 	def load_option(self) :
 		# recréer/efface une frame si il y en a deja une, en créer une sinon
-		try :
-			self.frame.destroy()
-		except :
-			pass
+		self.frame.destroy()
 
 		self.option = Options(self.window, self)
 
@@ -55,17 +42,15 @@ class Menu:
 	# charge une grille selon une option ou aleatoirement
 	def create_grid(self) :
 		self.frame.destroy()
-		self.btn_retour()
 
-		# reste a implementer les options
-		# créer une grille selon une config ou non
 		cfg = self.getConfig()
 		if cfg != "None" :
 			self.grille = Grille(self.window, self, cfg)  # charge une config
+
 		else :
+			# self.grille = Grille(self.window) #grille aléatoire
 			pass
 
-	# self.grille = Grille(self.window) #grille aléatoire
 
 	# liste et création des widgets utilisé
 	def title(self) :

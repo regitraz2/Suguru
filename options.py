@@ -8,17 +8,11 @@ class Options:
 		self.rdb_list = [] #liste des radiobutton
 		self.menu = menu
 
-		self.frame = Frame(bg="red")
+		self.frame = Frame()
+		self.frame.pack(expand=YES, side = TOP)
 
 		#par default, on affiche les options
 		self.load_opt()
-
-
-	def __del__(self):
-		try:
-			self.frame.destroy()
-		except:
-			pass
 
 
 	#charge l'affichage des option
@@ -26,9 +20,6 @@ class Options:
 		self.label_title()
 		self.btn_retour()
 		self.create_rdBtn_group(1)
-
-		self.frame.pack()
-
 
 	#créer un groupe de radiobouton
 	def create_rdBtn_group(self, num):
@@ -38,10 +29,12 @@ class Options:
 		file.close()
 		length = len(lines)
 
+		# on créer un radiobutton pour la generation automatique
+		self.create_radioBtn("Générer", "None")
 		k = 1 #correspond au numero du radiobutton créer
 		for i in range(length): #pour chaque lignes
 			if lines[i][0] == "c" and lines[i][1] == "f" and lines[i][2] == "g": #si la ligne comence par cfg
-				self.create_radioBtn("config "+str(k), "cfg"+str(k)) #on créer un radiobutton
+				self.create_radioBtn("Config "+str(k), "cfg"+str(k)) #on créer un radiobutton
 				k += 1
 
 		#on definit le bouton selectionné
@@ -76,4 +69,6 @@ class Options:
 
 
 	def load_menu(self):
+		self.btn_back.destroy()
+		self.frame.destroy()
 		self.menu.load_menu()

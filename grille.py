@@ -21,13 +21,6 @@ class Grille:
 		self.pack_frame()
 
 
-	def __del__(self):
-		try:
-			self.frame.destroy()
-		except:
-			pass
-
-
 	#constructeur grille a partir d'un fichier de config
 	def __init__(self, window, menu, cfg):
 		#attributs
@@ -41,8 +34,8 @@ class Grille:
 		self.create_frame()
 
 		self.load_config(cfg) #charge la grille selectionné dans les options
-
-		self.load_change_grid()
+		self.btn_retour() # pour retourner au menu
+		self.load_change_grid() #charge le pad pour entrer les chiffres dans la grille
 
 		self.pack_frame() #l'affiche
 
@@ -179,18 +172,6 @@ class Grille:
 		return res
 
 
-	#affiche les boutons pour changer la valeur d'un bouton
-	def load_change_grid(self):
-		self.frame2 = Frame(self.__window)
-		k = 0 #s'incremente jusqu'a 9
-		for i in range(3):
-			for j in range(3):
-				k += 1
-				Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
-
-		self.frame2.place(relx=0.5, rely=0.85, anchor=CENTER)
-
-
 	#dessine les groupes
 	def drawGroups(self):
 		for i in range(self.__n):
@@ -244,15 +225,6 @@ class Grille:
 			self.__selected.bgYellow() #met la couleur a jaune
 
 
-	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
-	def victory(self):
-		if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
-			self.frame_vict = Frame(self.__window)
-			Label(self.frame_vict, text = "VICTOIRE", font = ("Courrier", 40), fg="green").pack()
-			self.frame_vict.place(relx=0.5, rely=0.25, anchor=CENTER)
-		else:
-			return False
-
 	#renvoie vraie si toutes les cases sont remplies par un chiffre
 	def remplie(self):
 		for i in range(self.__n):
@@ -262,14 +234,48 @@ class Grille:
 		return True
 
 
+	#affiche les boutons pour changer la valeur d'un bouton
+	def load_change_grid(self):
+		self.frame2 = Frame(self.__window)
+		k = 0 #s'incremente jusqu'a 9
+		for i in range(3):
+			for j in range(3):
+				k += 1
+				Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
+
+		self.frame2.place(relx=0.5, rely=0.85, anchor=CENTER)
+
 	def btn_retour(self) :
 		self.btn_back = Button(self.__window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
 
 
+	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
+	def victory(self):
+		#if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
+			self.create_label_victory()
+		#else:
+		#	return False
+
+
 	def load_menu(self):
+		try: #si on a gagné, detruit le message de victoire
+			self.fram_victory.destroy()
+		except:
+			pass
+		#detruit toute la grille
+		self.frame2.destroy()
+		self.btn_back.destroy()
+		self.__frame.destroy()
+		#affiche le menu
 		self.menu.load_menu()
 
+
+	#le label affiché lors de la victiore
+	def create_label_victory(self):
+		self.fram_victory = Frame()
+		Label(self.fram_victory, text = "VICTOIRE", font = ("Courrier", 40), fg = "green").pack()
+		self.fram_victory.place(relx = 0.22, rely = 0.4)
 
 	#créer une frame
 	def create_frame(self) :
@@ -279,7 +285,3 @@ class Grille:
 	# empaquetage d'une frame
 	def pack_frame(self) :
 		self.__frame.pack(expand = YES, side = "top")
-
-	#renvoie la frame
-	def getFrame(self):
-		return self.__frame

@@ -7,7 +7,7 @@ class Grille:
 	#constructeur grille aleatoire
 	def __init__(self, window):
 		#attributs
-		self.__window = window
+		self.__window = window #fenetre dans laquelle est la grille
 		self.__n = 0 #taille de la grille
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
@@ -23,7 +23,7 @@ class Grille:
 	#constructeur grille a partir d'un fichier de config
 	def __init__(self, window, cfg):
 		#attributs
-		self.__window = window
+		self.__window = window #fenetre dans laquelle est la grille
 		self.__n = 0 #taille de la grille
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
@@ -44,6 +44,7 @@ class Grille:
 
 		lines = file.readlines() #récupere une liste contenant toutes les lignes du fichier de config
 		length = len(lines) #compte le nombre de lignes
+		file.close() #on ferme l'acces en lecture
 
 		#recherche de la config specifié dans le fichier (jusqu'a la fin du fichier)
 		k = 0

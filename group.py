@@ -1,9 +1,9 @@
 class Group:
 	def __init__(self, nom):
 		#attributs
-		self.__nom = nom
-		self.__list = []
-		self.__nbelem = 0
+		self.__nom = nom #nom du groupe
+		self.__list = [] #liste des case du groupe
+		self.__nbelem = 0 #nombre d'element du groupe
 		self.__estValide = False #dit si un groupe est correctement remplit
 
 

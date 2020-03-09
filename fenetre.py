@@ -1,6 +1,6 @@
 from tkinter import *
 from grille import Grille
-
+from options import Options
 
 
 class Fenetre :
@@ -17,8 +17,8 @@ class Fenetre :
 
 		#quelques parametres
 		self.window.title("Suguru")
-		self.window.minsize(450, 600)
-		self.window.maxsize(620, 600)
+		#self.window.minsize(450, 600)
+		#self.window.maxsize(620, 600)
 		self.window.geometry("450x600")
 		self.window.iconbitmap("image/logo.ico")
 
@@ -82,6 +82,11 @@ class Fenetre :
 		except:
 			pass
 
+		try: #detruit les options
+			self.option.frame.destroy()
+		except:
+			pass
+
 		self.create_menu()
 		self.pack_frame() #affiche la frame/le menu
 
@@ -92,11 +97,12 @@ class Fenetre :
 		try :
 			self.frame.destroy()
 			self.create_frame()
-		except AttributeError :
-			self.create_frame()
+			self.btn_retour()
+			self.pack_frame()
+		except :
+			pass
 
-		self.create_option()
-		self.pack_frame() #affiche la frame/les options
+		self.option = Options(self)
 
 
 	#créer les widget du menu
@@ -107,11 +113,6 @@ class Fenetre :
 		self.btn_quitter()
 
 
-	#créer les widget des options
-	def create_option(self):
-		self.btn_retour()
-
-
 	#charge une grille selon une option ou aleatoirement
 	def create_grid(self):
 		self.frame.destroy()
@@ -119,11 +120,12 @@ class Fenetre :
 
 		#reste a implementer les options
 		#créer une grille selon une config ou non
-		cfg = "cfg2"
-		if cfg:
-			self.grille = Grille(self.window, cfg)
+		cfg = self.getConfig()
+		if cfg != "None":
+			self.grille = Grille(self.window, cfg) #charge une config
 		else:
-			self.grille = Grille(self.window)
+			pass
+			#self.grille = Grille(self.window) #grille aléatoire
 
 
 	#liste et création des widgets utilisé
@@ -150,3 +152,15 @@ class Fenetre :
 	def btn_retour(self) :
 		self.btn_back = Button(self.window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x=5, y=5, width=80, height=40)
+
+	def getConfig(self):
+		file = open("opt.cfg", "r") #on ouvre l'acces en lecture
+		lines = file.readlines()  # récupere une liste contenant toutes les lignes du fichier
+		file.close() #on ferme l'acces en lecture
+
+		length = len(lines)  # compte le nombre de lignes
+
+		for i in range(length): #pour chaque ligne
+			if lines[i][0] != "#" and lines[i].split("=")[0] == "config": #si la ligne avant le = est egal a "config"
+				return lines[i].split("=")[1].rstrip() #renvoie l'element a droite du =
+

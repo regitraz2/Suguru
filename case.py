@@ -4,14 +4,14 @@ import time
 class Case:
 	def __init__(self, frame, nom, num, estModifiable, i, j, grille):
 		#attributs
+		self.grille = grille #grille dans laquelle est la case, sert a definir la case selectionné lors du click
 		self.__num = StringVar() #chaine de caractere dynamique (quand la var change, le texte du bouton aussi)
-		self.grille = grille
-		self.__grp = None
-		self.__estModifiable = estModifiable
-		self.__nom = nom
-		self.__posX = i
+		self.__grp = None #groupe dans lequel est la case (sera defini plus tard)
+		self.__estModifiable = estModifiable #dit si la case est modifiable
+		self.__nom = nom #nom de la case
+		self.__posX = i #sa position dans la grille (cf __matrice de grille)
 		self.__posY = j
-		self.setNum(num)
+		self.setNum(num) #on met la valeur de num dans __num
 
 		#sert a dessiner les bordures
 		self.__border_right = 1

@@ -1,27 +1,34 @@
 from tkinter import *
 from rdb import Rdb
+from menu import Menu
 
 class Options:
-	def __init__(self, window):
+	def __init__(self, window, menu):
 		self.window = window #la fenetre dans laquelle seront afficher les options
 		self.rdb_list = [] #liste des radiobutton
+		self.menu = menu
 
 		self.frame = Frame(bg="red")
 
 		#par default, on affiche les options
 		self.load_opt()
 
+
+	def __del__(self):
+		try:
+			self.frame.destroy()
+		except:
+			pass
+
+
 	#charge l'affichage des option
 	def load_opt(self):
 		self.label_title()
+		self.btn_retour()
 		self.create_rdBtn_group(1)
 
-		self.frame.pack(expand = YES, side = TOP)
+		self.frame.pack()
 
-	#affiche le titre
-	def label_title(self):
-		label_title = Label(self.frame, text = "OPTIONS", font = ("Courrier", 40), fg = '#563535')
-		label_title.pack(anchor=N)
 
 	#créer un groupe de radiobouton
 	def create_rdBtn_group(self, num):
@@ -57,5 +64,16 @@ class Options:
 		self.rdb_list.append(rdb) #on l'ajoute dans la liste des radiobutton
 
 
+	#affiche le titre
+	def label_title(self):
+		label_title = Label(self.frame, text = "OPTIONS", font = ("Courrier", 40), fg = '#563535')
+		label_title.pack(anchor=N)
+
+	#recharge le menu
+	def btn_retour(self) :
+		self.btn_back = Button(self.window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
+		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
 
 
+	def load_menu(self):
+		self.menu.load_menu()

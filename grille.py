@@ -5,8 +5,9 @@ from group import Group
 
 class Grille:
 	#constructeur grille aleatoire
-	def __init__(self, window):
+	def __init__(self, window, menu):
 		#attributs
+		self.menu = menu
 		self.__window = window #fenetre dans laquelle est la grille
 		self.__n = 0 #taille de la grille
 		self.__selected = None #case selectionnée
@@ -20,9 +21,17 @@ class Grille:
 		self.pack_frame()
 
 
+	def __del__(self):
+		try:
+			self.frame.destroy()
+		except:
+			pass
+
+
 	#constructeur grille a partir d'un fichier de config
-	def __init__(self, window, cfg):
+	def __init__(self, window, menu, cfg):
 		#attributs
+		self.menu = menu
 		self.__window = window #fenetre dans laquelle est la grille
 		self.__n = 0 #taille de la grille
 		self.__selected = None #case selectionnée
@@ -33,9 +42,9 @@ class Grille:
 
 		self.load_config(cfg) #charge la grille selectionné dans les options
 
-		self.pack_frame() #l'affiche
-
 		self.load_change_grid()
+
+		self.pack_frame() #l'affiche
 
 
 	#charge une grille a partir d'un fichier de config
@@ -251,6 +260,15 @@ class Grille:
 				if self.__matrice[i][j].getNum() == "":
 					return False
 		return True
+
+
+	def btn_retour(self) :
+		self.btn_back = Button(self.__window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
+		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
+
+
+	def load_menu(self):
+		self.menu.load_menu()
 
 
 	#créer une frame

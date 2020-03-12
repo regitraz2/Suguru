@@ -23,7 +23,7 @@ class Group:
 					res = False
 
 			for y in self.__list:
-				# "" est la valeur quand num n'est pas defini (cf setNum dans la classe case)
+				# "" est la valeur quand num n'est pas defini
 				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():
 					x.bgOrange()
 					y.bgOrange()

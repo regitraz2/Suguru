@@ -168,7 +168,6 @@ class Grille:
 							self.__matrice[i][j-1].bgRed()
 							if res is not False:
 								res = False
-					self.__matrice[i][j-1].drawBorder()
 		return res
 
 
@@ -177,6 +176,7 @@ class Grille:
 		for i in range(self.__n):
 			for j in range(self.__n):
 				if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():# si ce n'est pas deux fois la meme case
+					#definit les border de la case
 					if i+1 < self.__n:#si on est dans la grille on fait le test
 						if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
 							self.__matrice[i][j].setBdb(0)
@@ -193,9 +193,10 @@ class Grille:
 						if self.__matrice[i][j].getGrp() == self.__matrice[i][j-1].getGrp():
 							self.__matrice[i][j].setBdl(0)
 
-					self.__matrice[i][j].drawBorder()
+					self.__matrice[i][j].drawBorder() #dessine les border comme selectionné ci dessus
 
-	#ajoute une case dans un groupe
+
+	#ajoute une case dans un groupe1
 	def addInGroup(self, case, numGrp):
 		nom = "groupe{}".format(numGrp)
 
@@ -216,12 +217,8 @@ class Grille:
 	#modifie le parametre __selected de la classe grille
 	def setSelected(self, obj):
 		if self.__selected is not obj:
-			try: #si une case est deja selectionnée, remet sa couleur a la normale
-				self.__selected.bgLightGray()
-			except:
-				pass
 			self.__selected = obj #selectionne la case
-			#self.colorError()
+			self.colorError() #colore les erreurs de toute la grille
 			self.__selected.bgYellow() #met la couleur a jaune
 
 
@@ -252,10 +249,10 @@ class Grille:
 
 	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
 	def victory(self):
-		#if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
+		if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
 			self.create_label_victory()
-		#else:
-		#	return False
+		else:
+			return False
 
 
 	def load_menu(self):

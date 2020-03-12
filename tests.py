@@ -1,16 +1,13 @@
 from tkinter import *
-from grille import Grille
 
 
-class Btn():
+class Btn_with_border():
     def __init__(self, parent):
         frame = Frame(parent, bd=0)
 
         #create canvas
         self.canvas1 = Canvas(frame, relief = FLAT, bg="red", width = 54, height = 50, bd=-2000, borderwidth=-2)
         # parametre de la grille
-        self.canvas1.columnconfigure(0, weight = 0, pad = 0)
-        self.canvas1.rowconfigure(0, weight = 0, pad = 0)
         self.canvas1.grid(row=0, column=0, padx=0, pady=0, ipadx=0, ipady=0, sticky=NW)
         #create canvas
         self.canvas2 = Canvas(frame, relief = FLAT, bg="red", width = 54, height = 50, bd=-2000, borderwidth=-2)
@@ -61,7 +58,7 @@ class Btn():
 def main():
     root = Tk()
     root.geometry("600x450")
-    app = Btn(root)
+    app = Btn_with_border(root)
     root.mainloop()
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 from tkinter import *
-import time
 
 class Case:
 	def __init__(self, frame, nom, num, estModifiable, i, j, grille):
@@ -9,8 +8,6 @@ class Case:
 		self.__grp = None #groupe dans lequel est la case (sera defini plus tard)
 		self.__estModifiable = estModifiable #dit si la case est modifiable
 		self.__nom = nom #nom de la case
-		self.__posX = i #sa position dans la grille (cf __matrice de grille)
-		self.__posY = j
 		self.setNum(num) #on met la valeur de num dans __num
 
 		#sert a dessiner les bordures
@@ -21,15 +18,14 @@ class Case:
 
 
 		#deux bouton differents selon si il est modifiable ou non
+		# on créer le canvas (bd=-2 car le canvas Tkinter a un border a 2 par default) puis le bouton dedans
+		self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2) #on le grid dans la classe grille, idem pour la frame
+		self.rect_id = self.canvas.create_rectangle(0, 0, 54, 50) #un rectangle sert de background car la propriété background du canvas efface les border
+
 		if self.__estModifiable:
-			# on créer le canvas (bd=-2 car le canvas Tkinter a un border a 2 par default) puis le bouton dedans
-			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2) #on le grid dans la classe grille, idem pour la frame
-			self.rect_id = self.canvas.create_rectangle(0, 0, 54, 50) #un rectangle sert de background car la propriété background du canvas efface les border
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", command=lambda :self.grille.setSelected(self))
 			self.bgLightGray()
 		else:
-			self.canvas = Canvas(frame, relief = FLAT, width = 54, height = 50, bd = -2, bg="gray70") #on le grid dans la classe grille
-			self.rect_id = self.canvas.create_rectangle(0, 0, 54, 50) #un rectangle sert de background car la propriété background du canvas efface les border
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", state=DISABLED, disabledforeground="black")
 			self.bgGray()
 
@@ -65,14 +61,6 @@ class Case:
 	#dessine les bordure, 0 = petite bordure, 1 = grosse bordure
 	#ce systeme dessine les grosse bordure apres (ajoute un genre de priorité) ce qui rend la grille plus jolie
 	def drawBorder(self):
-		if self.__border_right == 0:
-			self.bdr()
-		if self.__border_left == 0:
-			self.bdl()
-		if self.__border_bottom == 0:
-			self.bdb()
-		if self.__border_top == 0:
-			self.bdt()
 		if self.__border_right == 1:
 			self.bbdr()
 		if self.__border_left == 1:
@@ -86,28 +74,13 @@ class Case:
 	#bbd = big border, ensuite il y a 4 direction : t = top, b = bottom, l = left et r = right
 	#dessine de grosse bordure (pour delimiter les groupes)
 	def bbdt(self) :
-		self.canvas.create_line(0, 1, 54, 1, width = 2)
+		self.canvas.create_line(0, 1, 54, 1, width = 2, joinstyle="bevel", capstyle="round")
 	def bbdb(self) :
-		self.canvas.create_line(0, 49, 54, 49, width = 2)
+		self.canvas.create_line(0, 49, 54, 49, width = 2, joinstyle="bevel", capstyle="round")
 	def bbdr(self) :
-		self.canvas.create_line(53, 0, 53, 54, width = 2)
+		self.canvas.create_line(53, 0, 53, 54, width = 2, joinstyle="bevel", capstyle="round")
 	def bbdl(self) :
-		self.canvas.create_line(1, 0, 1, 54, width = 2)
-
-
-	#dessine des bordure normales (pour delimiter les cases)
-	def bdt(self) :
-		pass
-		#self.canvas.create_line(0, 1, 54, 1, width = 2, fill="#cfcfcf")
-	def bdb(self) :
-		pass
-		#self.canvas.create_line(0, 49, 54, 49, width = 2, fill="#cfcfcf")
-	def bdr(self) :
-		pass
-		#self.canvas.create_line(53, 0, 53, 54, width = 2, fill="#cfcfcf")
-	def bdl(self) :
-		pass
-		#self.canvas.create_line(1, 0, 1, 54, width = 2, fill="#cfcfcf")
+		self.canvas.create_line(1, 0, 1, 54, width = 2, joinstyle="bevel", capstyle="round")
 
 
 	#Méthodes d'accès

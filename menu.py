@@ -58,7 +58,7 @@ class Menu:
 		label_title.pack()
 
 	def btn_opt(self) :
-		btn_opt = Button(self.frame, text = "options", font = ("Courrier", 25), fg = '#b62546', command = self.load_option)
+		btn_opt = Button(self.frame, text = "Options", font = ("Courrier", 25), fg = '#b62546', command = self.load_option)
 		btn_opt.pack(pady = 25, padx = 10, fill = 'both')
 
 	def btn_jouer(self) :

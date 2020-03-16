@@ -74,14 +74,25 @@ class Grille:
 	#met la config choisie sous forme exploitable / enleve les caracteres inutiles / isoles les x:y (cf fichier de config)
 	def configFormat(self, lines, k, n):
 		grid = []
-		l = len(lines[k])-1 #nombre de caractere d'une ligne -1
 		for i in range(n):
+			l = len(lines[k+i])-1 #nombre de caractere d'une ligne -1
 			sgrid = [] #une ligne de la matrice
 			for j in range(l):
 				if lines[k+i][j] ==":": #pour chaque ':' trouver on regarde ce qu'il y a a gauche et a droite
-					sgrid.append(lines[k+i][j-1]+lines[k+i][j]+lines[k+i][j+1]) #on met x:y dans une ligne
+					toappend = self.getGrpNum(lines[k+i], j-1)
+					toappend = toappend.split(":") #on créer un tableau avec, en 0 le chiffre de la case, en 1 le numero du groupe
+					sgrid.append(toappend) #on met ce tableau dans une ligne
 			grid.append(sgrid) #on ajoute la ligne a la matrice
 		return grid
+
+
+	#renvoie la chaine de caractere x:y, en prenant en compte que y peut etre > 9 (+ de un chiffre)
+	def getGrpNum(self, line, j):
+		res = ""
+		while line[j] != ",": #jusqu'au prochain "," recupere tout
+			res += line[j]
+			j+=1
+		return res
 
 
 	#charge et place les widget dans la grille
@@ -90,7 +101,7 @@ class Grille:
 			sgrid = [] #initialise une ligne
 			for j in range(n):
 				num = int(grid[i][j][0]) #chifre de la case
-				numGrp = int(grid[i][j][2]) #numero du groupe
+				numGrp = int(grid[i][j][1]) #numero du groupe
 
 				if num > 0:
 					estModifiable = False # on est dans une config précréer, alors on ne veut pas modifier les case qui on un numero
@@ -270,10 +281,10 @@ class Grille:
 
 #endregion
 
-#region Règles
+#region Affichage des règles
 	def btn_regles(self) :
 		self.btn_back = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
-		self.btn_back.place(x = (self.__window.winfo_width()-105), y = 5, width = 100, height = 40)
+		self.btn_back.place(relx = 0.75, y = 5, width = 100, height = 40)
 
 	def open_regle(self):
 		self.frame_regle = Frame(width=400, height=400, bg="#ecffd7")
@@ -326,7 +337,7 @@ class Grille:
 
 #--------------Autres---------------
 
-	#modifie le parametre __selected de la classe grille (c'est ce qui gere la selection de cases)
+	#modifie le parametre __selected de la classe grille (c'est ce qui gère la séléction de cases)
 	def setSelected(self, obj):
 		if self.__selected is not obj:
 			self.__selected = obj #selectionne la case
@@ -354,9 +365,13 @@ class Grille:
 		for i in range(3):
 			for j in range(3):
 				k += 1
-				Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
-
-		self.frame2.place(relx=0.5, rely=0.85, anchor=CENTER)
+				# Comme __selected est initialiser a None, on ne peut pas faire self.__selected.changeVal(i)) sans déclenché une erreur
+				# n'est utile que lorsque l'on a pas selectionnée de case
+				try:
+					Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
+				except:
+					pass
+		self.frame2.place(relx=0.5, rely=0.90, anchor=CENTER)
 
 
 	def btn_retour(self) :

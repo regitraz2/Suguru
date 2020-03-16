@@ -1,6 +1,5 @@
 from tkinter import *
 from rdb import Rdb
-from menu import Menu
 
 class Options:
 	def __init__(self, window, menu):
@@ -13,7 +12,6 @@ class Options:
 
 		#par default, on affiche les options
 		self.load_opt()
-
 
 
 	#charge l'affichage des option

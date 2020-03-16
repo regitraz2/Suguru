@@ -31,6 +31,15 @@ class Case:
 
 		self.btn.place(relx = 0.5, rely = 0.5, anchor = CENTER)  #on centre le bouton dans le canvas
 
+
+
+	#modifie la valeur de num (celle qui est affiché sur le bouton)
+	def changeVal(self, num):
+		self.setNum(num)
+		self.grille.victory()
+
+
+#region Backgrounds
 	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
@@ -50,14 +59,9 @@ class Case:
 	def bgBlue(self):
 		self.btn.configure(bg="lightblue")
 		self.canvas.itemconfigure(self.rect_id, fill="lightblue")
+#endregion
 
-
-	#modifie la valeur de num (celle qui est affiché sur le bouton)
-	def changeVal(self, num):
-		self.setNum(num)
-		self.grille.victory()
-
-
+#region Dessin des bordure de la case
 	#dessine les bordure, 0 = petite bordure, 1 = grosse bordure
 	#ce systeme dessine les grosse bordure apres (ajoute un genre de priorité) ce qui rend la grille plus jolie
 	def drawBorder(self):
@@ -81,6 +85,7 @@ class Case:
 		self.canvas.create_line(53, 0, 53, 54, width = 2, joinstyle="bevel", capstyle="round")
 	def bbdl(self) :
 		self.canvas.create_line(1, 0, 1, 54, width = 2, joinstyle="bevel", capstyle="round")
+#endregion
 
 
 	#Méthodes d'accès

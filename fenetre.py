@@ -16,10 +16,11 @@ class Fenetre :
 
 		#quelques parametres
 		self.window.title("Suguru")
-		#self.window.minsize(450, 600)
-		#self.window.maxsize(620, 600)
+		self.window.minsize(450, 600)
+		self.window.maxsize(620, 600)
 		self.window.geometry("450x600")
-		self.window.iconbitmap("image/logo.ico")
+
+		self.window.update() # actualise la fenetre, cela permet d'utiliser la taille de la fenetre inscrite ci-dessu par la suite
 
 		# tailles de la fenetre
 		windowWidth = self.window.winfo_width()

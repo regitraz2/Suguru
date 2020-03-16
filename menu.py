@@ -5,11 +5,11 @@ from options import Options
 
 class Menu:
 	def __init__(self, window):
-		self.window = window #la fenetre danslaquelle est le menu
+		self.window = window #la fenetre dans laquelle est le menu
 
 		self.load_menu()
 
-
+#region Gestion frame
 	# créer une frame
 	def create_frame(self) :
 		self.frame = Frame(self.window, bg = 'forestgreen')
@@ -17,8 +17,9 @@ class Menu:
 	# empaquetage d'une frame
 	def pack_frame(self) :
 		self.frame.pack(expand = YES, side = "top")
+	# endregion
 
-
+#region Chargement et création des composants
 	# affiche le menu
 	def load_menu(self) :
 		self.create_frame()
@@ -49,9 +50,11 @@ class Menu:
 
 		else :
 			# self.grille = Grille(self.window) #grille aléatoire
-			pass
+			print("Pas encore Implémenter")
 
+	# endregion
 
+#region Widgets
 	# liste et création des widgets utilisé
 	def title(self) :
 		label_title = Label(self.frame, text = "SUGURU", font = ("Courrier", 40), bg = 'forestgreen', fg = '#563535')
@@ -72,6 +75,8 @@ class Menu:
 	def btn_retour(self) :
 		self.btn_back = Button(self.window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
+#endregion
+
 
 	def getConfig(self) :
 		file = open("opt.cfg", "r")  # on ouvre l'acces en lecture

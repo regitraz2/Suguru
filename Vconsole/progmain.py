@@ -1,34 +1,4 @@
-from classeSC import *
-from grilles import *
 
-####################################### Algo de reso #######################################
-'''
-def AlgoReso(x):
-	for i in range(7):
-		for j in range(4):
-			if int(grille.item(i,j))==0 :
-			
-				if bool(SC1.Verif(i,j)):
-					if bool(SC1.getEtat())==False:
-						
-
-						y=int(input("votre chiffre : "))
-						if y>int(SC1.getTaille()) or y<=0 :
-							print("erreur le chiffre ")
-							continue
-						if bool(EgalVoisin(a,b,y)):
-							grille.itemset((a,b),y)
-							SC1.ActuEtat()
-							continue
-						else :
-							print("Un voisin contient deja cette valeur")
-							continue
-					else:
-						continue
-			else :
-				continue
-
-'''
 
 
  

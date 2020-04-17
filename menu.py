@@ -1,6 +1,7 @@
 from tkinter import *
 from grille import Grille
 from options import Options
+from config import *
 
 
 class Menu:
@@ -44,7 +45,7 @@ class Menu:
 	def create_grid(self) :
 		self.frame.destroy()
 
-		cfg = self.getConfig()
+		cfg = getConfig()
 		if cfg != "None" :
 			self.grille = Grille(self.window, self, cfg)  # charge une config
 
@@ -52,9 +53,9 @@ class Menu:
 			# self.grille = Grille(self.window) #grille aléatoire
 			print("Pas encore Implémenter")
 
-	# endregion
+#endregion
 
-#region Widgets
+# region widgets
 	# liste et création des widgets utilisé
 	def title(self) :
 		label_title = Label(self.frame, text = "SUGURU", font = ("Courrier", 40), bg = 'forestgreen', fg = '#563535')
@@ -76,16 +77,3 @@ class Menu:
 		self.btn_back = Button(self.window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
 #endregion
-
-
-	def getConfig(self) :
-		file = open("opt.cfg", "r")  # on ouvre l'acces en lecture
-		lines = file.readlines()  # récupere une liste contenant toutes les lignes du fichier
-		file.close()  # on ferme l'acces en lecture
-
-		length = len(lines)  # compte le nombre de lignes
-
-		for i in range(length) :  # pour chaque ligne
-			if lines[i][0] != "#" and lines[i].split("=")[0] == "config" :  # si la ligne avant le = est egal a "config"
-				return lines[i].split("=")[1].rstrip()  # renvoie l'element a droite du =
-

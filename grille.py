@@ -1,6 +1,7 @@
 from tkinter import *
 from case import Case
 from group import Group
+from tools import *
 
 
 class Grille:
@@ -42,61 +43,17 @@ class Grille:
 
 #region Chargement de la config
 	#charge une grille a partir d'un fichier de config
-	def load_config(self, name):
-		file = open("config.cfg", "r")
+	def load_config(self, cfg):
+		affiche(cfg)
 
-		lines = file.readlines() #récupere une liste contenant toutes les lignes du fichier de config
-		length = len(lines) #compte le nombre de lignes
-		file.close() #on ferme l'acces en lecture
-
-		#recherche de la config specifié dans le fichier (jusqu'a la fin du fichier)
-		k = 0
-		lines[k] = lines[k].rstrip()
-		while lines[k] != name and k < length:
-			k += 1
-			lines[k] = lines[k].rstrip() #enleve les \r\n ou \n a la fin
-
-		k += 1  #avance d'une ligne
-
-		n = int(lines[k][0]) # n = taille de la grille
-		self.__n = n #on iscrit la taille comme parametre de la grille
-
-		k += 1  #avance d'une ligne
-
-		# rappel :  dans x:y, x est le numero affiché dans une case, et y le numero du groupe
-		grid = self.configFormat(lines, k, n) #grille de taille n de couple x:y
-
-		self.create_config(grid, n) #charge et place les widget
+		self.create_config(cfg, len(cfg)) #charge et place les widget
 
 		self.drawGroups()
 
 
-	#met la config choisie sous forme exploitable / enleve les caracteres inutiles / isoles les x:y (cf fichier de config)
-	def configFormat(self, lines, k, n):
-		grid = []
-		for i in range(n):
-			l = len(lines[k+i])-1 #nombre de caractere d'une ligne -1
-			sgrid = [] #une ligne de la matrice
-			for j in range(l):
-				if lines[k+i][j] ==":": #pour chaque ':' trouver on regarde ce qu'il y a a gauche et a droite
-					toappend = self.getGrpNum(lines[k+i], j-1)
-					toappend = toappend.split(":") #on créer un tableau avec, en 0 le chiffre de la case, en 1 le numero du groupe
-					sgrid.append(toappend) #on met ce tableau dans une ligne
-			grid.append(sgrid) #on ajoute la ligne a la matrice
-		return grid
-
-
-	#renvoie la chaine de caractere x:y, en prenant en compte que y peut etre > 9 (+ de un chiffre)
-	def getGrpNum(self, line, j):
-		res = ""
-		while line[j] != ",": #jusqu'au prochain "," recupere tout
-			res += line[j]
-			j+=1
-		return res
-
-
 	#charge et place les widget dans la grille
 	def create_config(self, grid, n):
+		self.__n = n
 		for i in range(n):
 			sgrid = [] #initialise une ligne
 			for j in range(n):

@@ -44,7 +44,7 @@ class Grille:
 #region Chargement de la config
 	#charge une grille a partir d'un fichier de config
 	def load_config(self, cfg):
-		affiche(cfg)
+		affiche1dim(cfg)
 
 		self.create_config(cfg, len(cfg)) #charge et place les widget
 

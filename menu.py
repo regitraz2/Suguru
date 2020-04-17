@@ -55,9 +55,8 @@ class Menu:
 
 #endregion
 
-# region widgets
-	# liste et création des widgets utilisé
-	def title(self) :
+#region widgets
+	def title(self) : # liste et création des widgets utilisé
 		label_title = Label(self.frame, text = "SUGURU", font = ("Courrier", 40), bg = 'forestgreen', fg = '#563535')
 		label_title.pack()
 
@@ -76,4 +75,3 @@ class Menu:
 	def btn_retour(self) :
 		self.btn_back = Button(self.window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
-#endregion

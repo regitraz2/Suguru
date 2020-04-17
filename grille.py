@@ -44,6 +44,7 @@ class Grille:
 #region Chargement de la config
 	#charge une grille a partir d'un fichier de config
 	def load_config(self, cfg):
+		print("grille chargée : ")
 		affiche1dim(cfg)
 
 		self.create_config(cfg, len(cfg)) #charge et place les widget
@@ -57,8 +58,8 @@ class Grille:
 		for i in range(n):
 			sgrid = [] #initialise une ligne
 			for j in range(n):
-				num = int(grid[i][j][0]) #chifre de la case
-				numGrp = int(grid[i][j][1]) #numero du groupe
+				num = grid[i][j][0] #chifre de la case
+				numGrp = grid[i][j][1] #numero du groupe
 
 				if num > 0:
 					estModifiable = False # on est dans une config précréer, alors on ne veut pas modifier les case qui on un numero

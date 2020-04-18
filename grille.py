@@ -1,6 +1,7 @@
 from tkinter import *
 from case import Case
 from group import Group
+from errors import *
 from tools import *
 
 
@@ -14,6 +15,7 @@ class Grille:
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
+		self.__listError = listErrors()
 
 		self.create_frame()
 
@@ -31,6 +33,7 @@ class Grille:
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
+		self.__listError = listErrors()
 
 		self.create_frame()
 
@@ -55,9 +58,9 @@ class Grille:
 	#charge et place les widget dans la grille
 	def create_config(self, grid, n):
 		self.__n = n
-		for i in range(n):
+		for i in range(self.__n):
 			sgrid = [] #initialise une ligne
-			for j in range(n):
+			for j in range(self.__n):
 				num = grid[i][j][0] #chifre de la case
 				numGrp = grid[i][j][1] #numero du groupe
 
@@ -80,8 +83,9 @@ class Grille:
 				self.addInGroup(case, numGrp)
 
 			self.__matrice.append(sgrid) #ajout de la ligne dans la grille
+#endregion
 
-	#region Gestion groupes
+#region Gestion groupes
 	#ajoute une case dans un groupe1
 	def addInGroup(self, case, numGrp):
 		nom = "groupe{}".format(numGrp)
@@ -124,100 +128,86 @@ class Grille:
 
 					self.__matrice[i][j].drawBorder() #dessine les border comme selectionné ci dessus
 	#endregion
-#endregion
 
 #region Gestion des erreur
-	#colore en rouge les nombres identique et cote a cote et les doublon dans un groupe
-	#de plus renvoie vrai si il n'y a aucune erreurs (cf victoire)
-	def colorError(self):
-		#reinitialise les couleurs avant de recolorier les erreurs
-		for i in range(self.__n):
-			for j in range(self.__n):
-				if self.__matrice[i][j] == self.__selected: #on ne change pas le bg de la case selectionnée
-					self.__matrice[i][j].bgYellow()
-				else:#sinon on met la couleur de base de la case
-					if self.__matrice[i][j].getEstModif():
-						self.__matrice[i][j].bgLightGray()
-					else:
-						self.__matrice[i][j].bgGray()
-				#deux couleur differente selon si la case est modifiable ou non
+	def checkErrors(self):
+		# delete = True si il n'y a pas d'erreur sur cette case
+		# a la fin de la fonction on l'enleve de la liste des erreur, listCase2 et type servent a identifier l'erreur si il y en a une
+		delete = True
 
-		res = True # res sert a determiner la victoire
+		#position de la case selectionnée dans la matrice, sert a  trouver facilement les cases adjascentes
+		i = self.__selected.getI()
+		j = self.__selected.getJ()
 
-		#pour les groupes
-		for i in self.__list_group:
-			if res is not False: # si res est a faux alors on y touche plus mais on termine le coloriage
-				res = i.colorGroupError()
-			else:
-				i.colorGroupError()
+		#supprime les erreurs d'adjascences du numero de la case selectionnée (il peut y en avoir plusieurs)
+		if self.__matrice[i][j].getNum() != "":
+			self.__listError.deleteAdjError(self.__selected)
 
 		#pour les cases cote a cote
-		for i in range(self.__n):
-			for j in range(self.__n):
-				#teste les 4 case a coté de celle au rang [i][j] et les colore si elles ont le meme numero
-				if self.__matrice[i][j].getNum() != "":
-					if i+1 < self.__n:
-						if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i+1][j].bgRed()
-							if res is not False:
-								res = False
+		#teste les 8 case a coté de celle selectionnée et les colore si elles ont le meme numero
+		if self.__matrice[i][j].getNum() != "":
+			if i+1 < self.__n:
+				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
+					self.__listError.createError(self.__selected, self.__matrice[i+1][j])
+					delete = False
 
-					if j+1 < self.__n :
-						if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i][j+1].bgRed()
-							if res is not False:
-								res = False
+			if j+1 < self.__n :
+				if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i][j+1])
+					delete = False
 
-					if i-1 >= 0 :
-						if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i-1][j].bgRed()
-							if res is not False:
-								res = False
+			if i-1 >= 0 :
+				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j])
+					delete = False
 
-					if j-1 >= 0 :
-						if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i][j-1].bgRed()
-							if res is not False:
-								res = False
-					#pour les diagonales
-					if i+1 < self.__n and j+1 < self.__n :
-						if self.__matrice[i][j].getNum() == self.__matrice[i+1][j+1].getNum() :
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i+1][j+1].bgRed()
-							if res is not False :
-								res = False
+			if j-1 >= 0 :
+				if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i][j-1])
+					delete = False
 
-					if i+1 < self.__n and j-1 > 0 :
-						if self.__matrice[i][j].getNum() == self.__matrice[i+1][j-1].getNum() :
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i+1][j-1].bgRed()
-							if res is not False :
-								res = False
+			#pour les diagonales
+			if i+1 < self.__n and j+1 < self.__n :
+				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j+1].getNum() :
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i+1][j+1])
+					delete = False
 
-					if i-1 > 0 and j+1 < self.__n :
-						if self.__matrice[i][j].getNum() == self.__matrice[i-1][j+1].getNum() :
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i-1][j+1].bgRed()
-							if res is not False :
-								res = False
+			if i+1 < self.__n and j-1 > 0 :
+				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j-1].getNum() :
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i+1][j-1])
+					delete = False
 
-					if i-1 < 0 and j-1 > 0 :
-						if self.__matrice[i][j].getNum() == self.__matrice[i-1][j-1].getNum() :
-							self.__matrice[i][j].bgRed()
-							self.__matrice[i-1][j-1].bgRed()
-							if res is not False :
-								res = False
-		return res
-#endregion
+			if i-1 > 0 and j+1 < self.__n :
+				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j+1].getNum() :
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j+1])
+					delete = False
+
+			if i-1 < 0 and j-1 > 0 :
+				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j-1].getNum() :
+					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j-1])
+					delete = False
+
+		# pour les groupes
+		# les groupes ne contiennent que des cases avec des numeros,
+		# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
+		if self.__selected.getNum() != "" :
+			grp = self.__selected.getGrp() #le groupe dans lequel est la case selectionnée
+			caseErr = grp.isGroupError(self.__selected)  # cf definition de isGroupError
+
+			#si il y a des erreur, créer une erreur si elle n'existe pas, sinon nettoie tout le groupe des erreur en lien avec la case selectionnée
+			if len(caseErr) > 0 :
+				for err in caseErr:
+					self.__listError.createError(self.__matrice[i][j], err, grp.getNom())
+			else :
+				self.__listError.deleteGrpError(self.__selected, grp.getNom())
+
+
+	#endregion
 
 #region Victoire
 	#renvoie True si la victoire est acquise et dessine un gros VCTOIRE
 	def victory(self):
-		if(self.colorError() and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
+		if(self.__listError.getNb() == 0 and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
 			self.create_label_victory()
 		else:
 			return False
@@ -237,7 +227,7 @@ class Grille:
 		Label(self.fram_victory, text = "VICTOIRE", font = ("Courrier", 40), fg = "green").pack()
 		self.fram_victory.place(relx = 0.22, rely = 0.4)
 
-#endregion
+	#endregion
 
 #region Affichage des règles
 	def btn_regles(self) :
@@ -260,10 +250,10 @@ class Grille:
 		titre = Label(self.frame_regle, text="Règles", font=("Courrier", 40), bg="#ecffd7")
 		titre.place(relx=0.5, y=30, anchor=CENTER)
 
-		r1 = Label(self.frame_regle, text="Une grille contient des régions de taille différentes", font=("Courrier", 14), wraplength=300, bg="#ecffd7")
+		r1 = Label(self.frame_regle, text="Une grille contient des régions de taille variant entre 1 et 5 cases", font=("Courrier", 14), wraplength=300, bg="#ecffd7")
 		r1.place(relx=0.5, y=90, anchor=CENTER)
 
-		r2 = Label(self.frame_regle, text="Chaque régions doit contenir tout les chiffre de 1 à n, n étant la taille de la région", font=("Courrier", 14), wraplength=300, bg="#ecffd7")
+		r2 = Label(self.frame_regle, text="Chaques région doit contenir tout les chiffre de 1 à n, n étant la taille de la région", font=("Courrier", 14), wraplength=300, bg="#ecffd7")
 		r2.place(relx=0.5, y=160, anchor=CENTER)
 
 		r3 = Label(self.frame_regle, text = "Deux case adjacentes ne doivent pas contenir le même chiffre, cela inclu les diagonales", font=("Courrier", 14), wraplength=300, bg = "#ecffd7")
@@ -275,12 +265,9 @@ class Grille:
 		r5 = Label(self.frame_regle, text = "En orange : les doublons dans une région", font=("Courrier", 11), wraplength=300, bg = "#ecffd7")
 		r5.place(relx = 0.5, y = 330, anchor = CENTER)
 
-		r6 = Label(self.frame_regle, text = "En bleu : chiffres hors du max de la région", font=("Courrier", 11), wraplength=300, bg = "#ecffd7")
-		r6.place(relx = 0.5, y = 360, anchor = CENTER)
-
 	def destroy_regle(self):
 		self.frame_regle.destroy()
-#endregion
+	#endregion
 
 #region Gestion des frames
 	#créer une frame
@@ -291,16 +278,23 @@ class Grille:
 	# empaquetage d'une frame
 	def pack_frame(self) :
 		self.__frame.pack(expand = YES, side = "top")
-#endregion
+	#endregion
 
-#--------------Autres---------------
-
+#region --------------Autres---------------
 	#modifie le parametre __selected de la classe grille (c'est ce qui gère la séléction de cases)
 	def setSelected(self, obj):
-		if self.__selected is not obj:
-			self.__selected = obj #selectionne la case
-			self.colorError() #colore les erreurs de toute la grille
-			self.__selected.bgYellow() #met la couleur a jaune
+		#on remet a default uniquement si il n'y a pas d'erreur sur cette case
+		if self.__selected is not None:
+			if self.__selected.getErr() == False:
+				self.__selected.draw("default")
+			elif self.__selected.getErr() == "group":
+				self.__selected.draw("group")
+			elif self.__selected.getErr() == "adjascence":
+				self.__selected.draw("adjascence")
+
+		self.__selected = obj #selectionne la case
+		self.checkErrors()
+		self.__selected.bgYellow() #met la couleur a jaune
 
 
 	def load_menu(self):
@@ -316,22 +310,20 @@ class Grille:
 		self.menu.load_menu()
 
 
-	#affiche les 9 boutons permettant de changer la valeur d'une case
+	#affiche les 5 boutons permettant de changer la valeur d'une case
 	def load_change_grid(self):
 		self.frame2 = Frame(self.__window)
-		k = 0 #s'incremente jusqu'a 9
-		for i in range(3):
-			for j in range(3):
-				k += 1
-				# Comme __selected est initialiser a None, on ne peut pas faire self.__selected.changeVal(i)) sans déclenché une erreur
-				# n'est utile que lorsque l'on a pas selectionnée de case
-				try:
-					Button(self.frame2, text="{}".format(k), width=5, height=2, command=lambda i=k: self.__selected.changeVal(i)).grid(row=i, column=j)
-				except:
-					pass
+		for i in range(5):
+			# Comme __selected est initialiser a None, on ne peut pas faire self.__selected.changeVal(i)) sans déclenché une erreur
+			# le try n'est utile que lorsque l'on a pas selectionnée de case
+			try:
+				Button(self.frame2, text="{}".format(i+1), width=5, height=2, command=lambda j=i+1: self.__selected.changeVal(j)).grid(row=0, column=i)
+			except:
+				pass
 		self.frame2.place(relx=0.5, rely=0.90, anchor=CENTER)
 
 
 	def btn_retour(self) :
 		self.btn_back = Button(self.__window, text = "Menu", font = ("Courrier", 20), fg = '#b62546', command = self.load_menu)
 		self.btn_back.place(x = 5, y = 5, width = 80, height = 40)
+#endregion

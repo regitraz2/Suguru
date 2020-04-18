@@ -3,32 +3,21 @@ class Group:
 		#attributs
 		self.__nom = nom #nom du groupe
 		self.__list = [] #liste des case du groupe
-		self.__nbelem = 0 #nombre d'element du groupe
 		self.__estValide = False #dit si un groupe est correctement remplit
 
 
 	#ajoute un element et increment le nombre d'elements
+	#pas de suppression car les groupes ne change pas au cour de la partie
 	def ajout(self, elem):
 		self.__list.append(elem)
-		self.__nbelem += 1
 
 
-	#colore les doublons d'un nombre dans le groupe
-	def colorGroupError(self):
-		res = True #sert a determiner la victoire
-		for x in self.__list:
-			if x.getNum() > str(self.__nbelem): #si le numero est un chiffre dépassant le max du groupe
-				x.bgBlue()
-				if res is not False:
-					res = False
-
-			for y in self.__list:
-				# "" est la valeur quand num n'est pas defini
-				if x.getNom() != y.getNom() and x.getNum() != "" and y.getNum() != "" and x.getNum() == y.getNum():
-					x.bgOrange()
-					y.bgOrange()
-					if res is not False:
-						res = False
+	#renvoie toutes les cases concerné du groupe si il y a un doublon
+	def isGroupError(self, case):
+		res = []
+		for elem in self.__list:
+			if elem.getNum() == case.getNum() and elem.getNom() != case.getNom():
+				res.append(elem)
 		return res
 
 

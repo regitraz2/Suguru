@@ -10,6 +10,14 @@ class Case:
 		self.__nom = nom #nom de la case
 		self.setNum(num) #on met la valeur de num dans __num
 
+		#permet de changer la couleur uniquement si il n'y a pas d'erreur, lors de la suppression d'une erreur ce parametre change
+		#peprmet aussi de faire une sorte de file de priorité des erreur : un erreur de groupe est affiche si il n'y a pas d'erreur d'adjascence
+		self.__hasError = False
+
+		#indice de cette case dans la matrice, sert lors de l'optimisation des erreurs
+		self.__i = i
+		self.__j = j
+
 		#sert a dessiner les bordures
 		self.__border_right = 1
 		self.__border_left = 1
@@ -24,42 +32,63 @@ class Case:
 
 		if self.__estModifiable:
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", command=lambda :self.grille.setSelected(self))
-			self.bgLightGray()
 		else:
 			self.btn = Button(self.canvas, textvariable = self.__num, height = 2, width = 5, relief = "flat", state=DISABLED, disabledforeground="black")
-			self.bgGray()
+
+		self.draw("default") #colore la case de la bonne couleur
 
 		self.btn.place(relx = 0.5, rely = 0.5, anchor = CENTER)  #on centre le bouton dans le canvas
 
 
 
-	#modifie la valeur de num (celle qui est affiché sur le bouton)
-	def changeVal(self, num):
-		self.setNum(num)
-		self.grille.victory()
-
-
-#region Backgrounds
+#region Backgrounds et couleurs
 	#change la couleur de fond de la case
 	def bgRed(self):
 		self.btn.configure(bg="#ff5c5c")
 		self.canvas.itemconfigure(self.rect_id, fill="#ff5c5c")
+	def bgDarkRed(self):
+		self.btn.configure(bg="#9c321b")
+		self.canvas.itemconfigure(self.rect_id, fill="#9c321b")
 	def bgOrange(self):
 		self.btn.configure(bg="orange")
 		self.canvas.itemconfigure(self.rect_id, fill="orange")
+	def bgDarkOrange(self):
+		self.btn.configure(bg="darkorange3")
+		self.canvas.itemconfigure(self.rect_id, fill="darkorange3")
 	def bgYellow(self):
 		self.btn.configure(bg = "#fffa87")
 		self.canvas.itemconfigure(self.rect_id, fill="#fffa87")
 	def bgLightGray(self):
-		self.btn.configure(bg="lightgray")
-		self.canvas.itemconfigure(self.rect_id, fill="lightgray")
+		self.btn.configure(bg="#d6d6d6")
+		self.canvas.itemconfigure(self.rect_id, fill="#d6d6d6")
 	def bgGray(self):
 		self.btn.configure(bg="gray70")
 		self.canvas.itemconfigure(self.rect_id, fill="gray70")
-	def bgBlue(self):
-		self.btn.configure(bg="lightblue")
-		self.canvas.itemconfigure(self.rect_id, fill="lightblue")
-#endregion
+
+	def draw(self, type) :
+		if type == "default" and self.__hasError == False: #si il n'y a pas d'erreur
+			if self.__estModifiable :
+				self.bgLightGray()
+			else :
+				self.bgGray()
+
+		elif type == "adjascence" :
+			self.__hasError = "adjascence"
+			if self.__estModifiable :
+				self.bgRed()
+			else :
+				self.bgDarkRed()
+
+		elif type == "group" :
+			if self.__hasError != "adjascence": #priorité aux erreurs d'adjascence
+				self.__hasError = "group"
+
+			if self.__estModifiable :
+				self.bgOrange()
+			else :
+				self.bgDarkOrange()
+
+#endregion et couleurs
 
 #region Dessin des bordure de la case
 	#dessine les bordure, 0 = petite bordure, 1 = grosse bordure
@@ -88,7 +117,7 @@ class Case:
 #endregion
 
 
-	#Méthodes d'accès
+#region Méthodes d'accès
 	def setNum(self, num):
 		self.__num.set(num)
 	def setGrp(self, grp):
@@ -103,6 +132,9 @@ class Case:
 		self.__border_top = val
 	def setBdb(self, val):
 		self.__border_bottom = val
+	def setErr(self, val):
+		self.__hasError = val
+
 	def getNum(self):
 		return self.__num.get()
 	def getNom(self):
@@ -111,3 +143,19 @@ class Case:
 		return self.__grp
 	def getEstModif(self):
 		return self.__estModifiable
+	def getI(self):
+		return self.__i
+	def getJ(self):
+		return self.__j
+	def getErr(self):
+		return self.__hasError
+#endregion
+
+
+#region Autre
+	#modifie la valeur de num (celle qui est affiché sur le bouton)
+	def changeVal(self, num):
+		self.setNum(num)
+		self.grille.victory()
+		self.grille.checkErrors()
+#endregion

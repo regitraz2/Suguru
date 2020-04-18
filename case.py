@@ -65,6 +65,7 @@ class Case:
 		self.btn.configure(bg="gray70")
 		self.canvas.itemconfigure(self.rect_id, fill="gray70")
 
+	#choisit la couleur du background en fonction de self.__hasError
 	def draw(self, type) :
 		if type == "default" and self.__hasError == False: #si il n'y a pas d'erreur
 			if self.__estModifiable :
@@ -83,10 +84,10 @@ class Case:
 			if self.__hasError != "adjascence": #priorité aux erreurs d'adjascence
 				self.__hasError = "group"
 
-			if self.__estModifiable :
-				self.bgOrange()
-			else :
-				self.bgDarkOrange()
+				if self.__estModifiable :
+					self.bgOrange()
+				else :
+					self.bgDarkOrange()
 
 #endregion et couleurs
 

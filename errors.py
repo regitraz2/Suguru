@@ -1,6 +1,7 @@
 from error import Error
 
-#Ce code peut sembler avoir une haute complexité, mais comme nous travaillon sur de petits tableaux la plupart du temps (taille max: 10)
+#Ce code peut sembler avoir une haute complexité, mais comme nous travaillon sur de petits tableaux la plupart
+# du temps (a moins que l'utilisateur fasse exprè de déclencher plein d'erreur)
 #cela reste bien moin gourmand en ressources que la premiere facon de gérer les erreurs
 class listErrors:
 	def __init__(self):
@@ -17,15 +18,14 @@ class listErrors:
 		for err in self.__AdjErr:
 			if err.getCase1().getNom() == case1.getNom() and err.getCase2().getNom() == case2.getNom():
 				return #arrete la fonction
-		for err in self.__GrpErr:
-			if err.getCase1().getNom() == case1.getNom() and err.getCase2().getNom() == case2.getNom():
-				return #arrete la fonction
+		if group != "": #onne teste dans le tableau groupe que si c'est une erreur de groupe
+			for err in self.__GrpErr:
+				if err.getCase1().getNom() == case1.getNom() or err.getCase2().getNom() == case2.getNom():
+					return #arrete la fonction
 
 		#il y a seulement deux type d'erreurs, si on laisse la valeur par defaut c'est une erreur d'adjascence
 		if group == "":
 			typeErreur = "adjascence"
-			self.deleteGrpError(case1, case1.getGrp().getNom())
-			self.deleteGrpError(case2, case2.getGrp().getNom())
 		else:
 			typeErreur = "group"
 
@@ -46,7 +46,7 @@ class listErrors:
 		for err in self.__AdjErr : err.print()
 
 
-	#supprime une erreur de la liste, et l'objet via le garbage collector, donc detruit l'objet Error correspondant
+	#supprime toutes les erreur de self.__AdjErr qui contiennent case
 	def deleteAdjError(self, case):
 		#supprime toute les erreurs d'adjascence contenant case
 		tmp = []
@@ -57,27 +57,12 @@ class listErrors:
 					#on ajout l'erreur dans une liste d'erreur que l'on supprimera plus tard
 					tmp.append(err)
 
-
+		#on supprime
 		for err in tmp:
-			# on peut de nouveau recolorie la case
-			err.getCase1().setErr(False)
-			err.getCase2().setErr(False)
+			self.delete(self.__AdjErr, err)
 
-			# recolore en gris
-			err.getCase1().draw("default")
-			err.getCase2().draw("default")
 
-			self.__AdjErr.remove(err)
-
-			self.__nbError -= 1
-
-			print(self.__nbError)
-			print("listGrp : ")
-			for err in self.__GrpErr : err.print()
-			print("listAdj : ")
-			for err in self.__AdjErr : err.print()
-
-		self.recolore()
+		self.recolore()#actualisation graphique
 
 	#supprime toute les erreurs de groupe qui contienne case
 	def deleteGrpError(self, case, grp):
@@ -88,39 +73,44 @@ class listErrors:
 					# si notre case n'a pas le meme num que l'erreur, on supprime
 					if case.getNum() != err.getNumCase1() and case.getNum() != err.getNumCase2():
 						tmp.append(err)
-
+		#on supprime
 		for err in tmp:
-			# on peut de nouveau recolorie la case
-			err.getCase1().setErr(False)
-			err.getCase2().setErr(False)
+			self.delete(self.__GrpErr, err)
 
-			# recolore en gris
-			err.getCase1().draw("default")
-			err.getCase2().draw("default")
+		self.recolore() #actualisation graphique
 
-			self.__GrpErr.remove(err)
-			self.__nbError -= 1
 
-			print(self.__nbError)
-			print("listGrp : ")
-			for err in self.__GrpErr : err.print()
-			print("listAdj : ")
-			for err in self.__AdjErr : err.print()
+	#supprime l'erreur err du tableau tab
+	def delete(self, tab, err):
+		# on peut de nouveau recolorie la case
+		err.getCase1().setErr(False)
+		err.getCase2().setErr(False)
 
-		self.recolore()
+		# recolore en gris
+		err.getCase1().draw("default")
+		err.getCase2().draw("default")
+
+		tab.remove(err)
+		self.__nbError -= 1
+
+		print(self.__nbError)
+		print("listGrp : ")
+		for err in self.__GrpErr : err.print()
+		print("listAdj : ")
+		for err in self.__AdjErr : err.print()
 
 
 	#actualise les couleurs des erreurs (pour etre plus precis, recolore toutes les cases qui ont été supprimer
 	# d'une autre erreur que celles restantes dans la tableau, et qui on donc leur parametre hasErr a False
 	def recolore(self):
-		#recolore les erreurs restantes dans le groupe en orange
+		#recolore les erreurs de groupe en orange
 		for err in self.__GrpErr:
 			if err.getCase1().getErr() == False:
 				err.getCase1().draw("group")
 			if err.getCase2().getErr() == False :
 				err.getCase2().draw("group")
 
-		#recolore les erreurs restante en rouge si elles sont toujours dans le tableau
+		#recolore les d'adjascence en rouge
 		for err in self.__AdjErr:
 			if err.getCase1().getErr() == False:
 				err.getCase1().draw("adjascence")

@@ -131,70 +131,59 @@ class Grille:
 
 #region Gestion des erreur
 	def checkErrors(self):
-		# delete = True si il n'y a pas d'erreur sur cette case
-		# a la fin de la fonction on l'enleve de la liste des erreur, listCase2 et type servent a identifier l'erreur si il y en a une
-		delete = True
-
 		#position de la case selectionnée dans la matrice, sert a  trouver facilement les cases adjascentes
 		i = self.__selected.getI()
 		j = self.__selected.getJ()
 
-		#supprime les erreurs d'adjascences du numero de la case selectionnée (il peut y en avoir plusieurs)
-		if self.__matrice[i][j].getNum() != "":
-			self.__listError.deleteAdjError(self.__selected)
-
 		#pour les cases cote a cote
 		#teste les 8 case a coté de celle selectionnée et les colore si elles ont le meme numero
 		if self.__matrice[i][j].getNum() != "":
+
+			# supprime les erreurs d'adjascences du numero de la case selectionnée (il peut y en avoir plusieurs)
+			# en gros actualise la liste des erreurs d'adjascence
+			self.__listError.deleteAdjError(self.__selected)
+
 			if i+1 < self.__n:
 				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
 					self.__listError.createError(self.__selected, self.__matrice[i+1][j])
-					delete = False
 
 			if j+1 < self.__n :
 				if self.__matrice[i][j].getNum() == self.__matrice[i][j+1].getNum():
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i][j+1])
-					delete = False
 
 			if i-1 >= 0 :
 				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j].getNum():
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j])
-					delete = False
 
 			if j-1 >= 0 :
 				if self.__matrice[i][j].getNum() == self.__matrice[i][j-1].getNum():
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i][j-1])
-					delete = False
 
 			#pour les diagonales
 			if i+1 < self.__n and j+1 < self.__n :
 				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j+1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i+1][j+1])
-					delete = False
 
-			if i+1 < self.__n and j-1 > 0 :
+			if i+1 < self.__n and j-1 >= 0 :
 				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j-1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i+1][j-1])
-					delete = False
 
-			if i-1 > 0 and j+1 < self.__n :
+			if i-1 >= 0 and j+1 < self.__n :
 				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j+1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j+1])
-					delete = False
 
-			if i-1 < 0 and j-1 > 0 :
+			if i-1 >= 0 and j-1 >= 0 :
 				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j-1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j-1])
-					delete = False
 
 		# pour les groupes
 		# les groupes ne contiennent que des cases avec des numeros,
 		# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
-		if self.__selected.getNum() != "" :
+		if self.__selected.getNum() != "":
 			grp = self.__selected.getGrp() #le groupe dans lequel est la case selectionnée
 			caseErr = grp.isGroupError(self.__selected)  # cf definition de isGroupError
 
-			#si il y a des erreur, créer une erreur si elle n'existe pas, sinon nettoie tout le groupe des erreur en lien avec la case selectionnée
+			#si il y a des erreur dans caseErr, créer une erreur si elle n'existe pas, sinon nettoie tout le groupe des erreur en lien avec la case selectionnée
 			if len(caseErr) > 0 :
 				for err in caseErr:
 					self.__listError.createError(self.__matrice[i][j], err, grp.getNom())

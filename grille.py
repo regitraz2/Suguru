@@ -39,7 +39,7 @@ class Grille:
 
 		self.load_config(cfg) #charge la grille selectionné dans les options
 		self.btn_retour() # pour retourner au menu
-		self.load_change_grid() #charge le pad pour entrer les chiffres dans la grille
+		self.load_down_pad() #charge le pad pour entrer les chiffres dans la grille
 		self.btn_regles() #affiche les règles
 
 		self.pack_frame() #l'affiche
@@ -50,7 +50,7 @@ class Grille:
 		print("grille chargée : ")
 		affiche1dim(cfg)
 
-		self.create_config(cfg, len(cfg)) #charge et place les widget
+		self.create_config(cfg, len(cfg)) #charge et place les widget (cases)
 
 		self.drawGroups()
 
@@ -130,8 +130,11 @@ class Grille:
 	#endregion
 
 #region Gestion des erreur
+	#cherche des erreurs autour de la cae selectionnée
 	def checkErrors(self):
 		#position de la case selectionnée dans la matrice, sert a  trouver facilement les cases adjascentes
+		#et ainsi la case matrice[i][j] est la meme que la case selected, ce qui m'a donné moins de travail
+		# quand j'ai changer de facon de gérer les erreurs
 		i = self.__selected.getI()
 		j = self.__selected.getJ()
 
@@ -176,10 +179,9 @@ class Grille:
 				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j-1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j-1])
 
-		# pour les groupes
-		# les groupes ne contiennent que des cases avec des numeros,
-		# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
-		if self.__selected.getNum() != "":
+			# pour les groupes
+			# les groupes ne contiennent que des cases avec des numeros,
+			# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
 			grp = self.__selected.getGrp() #le groupe dans lequel est la case selectionnée
 			caseErr = grp.isGroupError(self.__selected)  # cf definition de isGroupError
 
@@ -189,6 +191,11 @@ class Grille:
 					self.__listError.createError(self.__matrice[i][j], err, grp.getNom())
 			else :
 				self.__listError.deleteGrpError(self.__selected, grp.getNom())
+
+			self.__listError.deleteOutErr(self.__matrice[i][j])
+			#si le numero entré dépasse le max du groupe, et si il n'y a aucune autre erreur (elles ont la priorité)
+			if(self.__selected.getErr() == False and  int(self.__selected.getNum()) > self.__selected.getGrp().getNbElem()):
+				self.__listError.createError(self.__matrice[i][j], "")
 
 
 	#endregion
@@ -280,6 +287,8 @@ class Grille:
 				self.__selected.draw("group")
 			elif self.__selected.getErr() == "adjascence":
 				self.__selected.draw("adjascence")
+			elif self.__selected.getErr() == "out":
+				self.__selected.draw("out")
 
 		self.__selected = obj #selectionne la case
 		self.checkErrors()
@@ -300,7 +309,7 @@ class Grille:
 
 
 	#affiche les 5 boutons permettant de changer la valeur d'une case
-	def load_change_grid(self):
+	def load_down_pad(self):
 		self.frame2 = Frame(self.__window)
 		for i in range(5):
 			# Comme __selected est initialiser a None, on ne peut pas faire self.__selected.changeVal(i)) sans déclenché une erreur

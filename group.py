@@ -3,13 +3,13 @@ class Group:
 		#attributs
 		self.__nom = nom #nom du groupe
 		self.__list = [] #liste des case du groupe
-		self.__estValide = False #dit si un groupe est correctement remplit
-
+		self.__nbElem = 0
 
 	#ajoute un element et increment le nombre d'elements
 	#pas de suppression car les groupes ne change pas au cour de la partie
 	def ajout(self, elem):
 		self.__list.append(elem)
+		self.__nbElem += 1
 
 
 	#renvoie toutes les cases concerné du groupe si il y a un doublon
@@ -27,4 +27,4 @@ class Group:
 	def getListe(self):
 		return self.__list
 	def getNbElem(self):
-		return self.__nbelem
+		return self.__nbElem

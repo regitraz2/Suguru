@@ -64,6 +64,10 @@ class Case:
 	def bgGray(self):
 		self.btn.configure(bg="gray70")
 		self.canvas.itemconfigure(self.rect_id, fill="gray70")
+	def bgBlue(self):
+		self.btn.configure(bg="lightblue")
+		self.canvas.itemconfigure(self.rect_id, fill="lightblue")
+
 
 	#choisit la couleur du background en fonction de self.__hasError
 	def draw(self, type) :
@@ -88,6 +92,11 @@ class Case:
 					self.bgOrange()
 				else :
 					self.bgDarkOrange()
+
+		elif type == "out":
+			if self.__hasError not in ["adjascence", "group"]:
+				self.__hasError = "out"
+				self.bgBlue()
 
 #endregion et couleurs
 

@@ -18,24 +18,31 @@ class Error:
 		self.__case1 = case1
 		self.__case2 = case2
 
-		self.__numCase1 = case1.getNum()
-		self.__numCase2 = case2.getNum()
+		if(case2 != ""):
+			self.__numCase1 = case1.getNum()
+			self.__numCase2 = case2.getNum()
 
-		if(self.__group != ""): #cas d'erreur de groupe
-			self.__case1.draw("group")
-			self.__case2.draw("group")
-		else: #cas d'erreur d'adjascence
-			self.__case1.draw("adjascence")
-			self.__case2.draw("adjascence")
+			if(self.__group != ""): #cas d'erreur de groupe
+				self.__case1.draw("group")
+				self.__case2.draw("group")
+			else: #cas d'erreur d'adjascence
+				self.__case1.draw("adjascence")
+				self.__case2.draw("adjascence")
+
+		else: #cas erreur out (du max du groupe)
+			self.__numCase1 = case1.getNum()
+			self.__case1.draw("out")
+
 
 	def print(self):
 		print("err type : {}".format(self.__type))
 		print(self.__case1.getNom(), end=", ")
 		print(self.__case1.getNum(), end=", ")
 		print(self.__numCase1)
-		print(self.__case2.getNom(), end=", ")
-		print(self.__case2.getNum(), end=", ")
-		print(self.__numCase2)
+		if (self.__case2 != ""): #cas erreur out (du max du groupe)
+			print(self.__case2.getNom(), end=", ")
+			print(self.__case2.getNum(), end=", ")
+			print(self.__numCase2)
 
 
 	def getType(self):

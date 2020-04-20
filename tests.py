@@ -1,1 +1,4 @@
-from sympy import *
+
+
+if "" != "5":
+	print("yes")

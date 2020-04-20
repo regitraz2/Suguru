@@ -14,7 +14,6 @@ class listErrors:
 
 	#créer une erreur si elle n'existe pas deja
 	def createError(self, case1, case2, group=""):
-
 		#si une erreur sur ces deux cases existe deja, on ne fait rien
 		for err in self.__AdjErr:
 			if err.getCase1().getNom() == case1.getNom() and err.getCase2().getNom() == case2.getNom():
@@ -59,14 +58,13 @@ class listErrors:
 		for err in self.__AdjErr:
 			if err.getCase1().getNom() == case.getNom() or err.getCase2().getNom() == case.getNom():
 				#si notre case n'a pas le meme num que l'erreur, on supprime
-				if case.getNum() != err.getNumCase1() and case.getNum() != err.getNumCase2():
+				if (case.getNum() != err.getNumCase1() and case.getNum() != err.getNumCase2()):
 					#on ajout l'erreur dans une liste d'erreur que l'on supprimera plus tard
 					tmp.append(err)
 
 		#on supprime
 		for err in tmp:
 			self.delete(self.__AdjErr, err)
-
 
 		#actualisation graphique, c'est utile quand une case est dans plusieurs erreurs
 		self.recolore()

@@ -142,14 +142,14 @@ class Grille:
 		i = self.__selected.getI()
 		j = self.__selected.getJ()
 
+		# supprime les erreurs d'adjascences du numero de la case selectionnée (il peut y en avoir plusieurs)
+		# en gros actualise la liste des erreurs d'adjascence
+		self.__listError.deleteAdjError(self.__selected)
+		self.__listError.deleteOutErr(self.__matrice[i][j])
+
 		#pour les cases cote a cote
 		#teste les 8 case a coté de celle selectionnée et les colore si elles ont le meme numero
 		if self.__matrice[i][j].getNum() != "":
-
-			# supprime les erreurs d'adjascences du numero de la case selectionnée (il peut y en avoir plusieurs)
-			# en gros actualise la liste des erreurs d'adjascence
-			self.__listError.deleteAdjError(self.__selected)
-
 			if i+1 < self.__n:
 				if self.__matrice[i][j].getNum() == self.__matrice[i+1][j].getNum():
 					self.__listError.createError(self.__selected, self.__matrice[i+1][j])
@@ -183,23 +183,22 @@ class Grille:
 				if self.__matrice[i][j].getNum() == self.__matrice[i-1][j-1].getNum() :
 					self.__listError.createError(self.__matrice[i][j], self.__matrice[i-1][j-1])
 
-			# pour les groupes
-			# les groupes ne contiennent que des cases avec des numeros,
-			# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
-			grp = self.__selected.getGrp() #le groupe dans lequel est la case selectionnée
-			caseErr = grp.isGroupError(self.__selected)  # cf definition de isGroupError
-
-			#si il y a des erreur dans caseErr, créer une erreur si elle n'existe pas, sinon nettoie tout le groupe des erreur en lien avec la case selectionnée
-			if len(caseErr) > 0 :
-				for err in caseErr:
-					self.__listError.createError(self.__matrice[i][j], err, grp.getNom())
-			else :
-				self.__listError.deleteGrpError(self.__selected, grp.getNom())
-
-			self.__listError.deleteOutErr(self.__matrice[i][j])
 			#si le numero entré dépasse le max du groupe, et si il n'y a aucune autre erreur (elles ont la priorité)
 			if(self.__selected.getErr() == False and  int(self.__selected.getNum()) > self.__selected.getGrp().getNbElem()):
 				self.__listError.createError(self.__matrice[i][j], "")
+
+		# pour les groupes
+		# les groupes ne contiennent que des cases avec des numeros,
+		# donc si la case selectionnée n'en a pas nous ne testons pas les erreurs de groupe car il n'y aurais aucune correspondance des numéros
+		grp = self.__selected.getGrp() #le groupe dans lequel est la case selectionnée
+		caseErr = grp.isGroupError(self.__selected)  # cf definition de isGroupError
+
+		#si il y a des erreur dans caseErr, créer une erreur si elle n'existe pas, sinon nettoie tout le groupe des erreur en lien avec la case selectionnée
+		if len(caseErr) > 0 and self.__selected.getNum() != "":
+			for err in caseErr:
+				self.__listError.createError(self.__matrice[i][j], err, grp.getNom())
+		else :
+			self.__listError.deleteGrpError(self.__selected, grp.getNom())
 
 
 	#endregion
@@ -237,17 +236,19 @@ class Grille:
 
 	def solve(self):
 		self.__cellulesModifiables = []
+		length = 0
 		for i in range(self.__n):
 			for j in range(self.__n):
 				c = self.__matrice[i][j]
 				if (c.getEstModif()):
 					self.__cellulesModifiables.append([c,0,c.getGrp().getNbElem()])
+					length += 1
 		k = 0
-		while (not self.victory()) and (k < len(self.__cellulesModifiables)):
+		while (not self.__solved):
 			CURRENT = self.__cellulesModifiables[k]
 			self.setSelected(CURRENT[0])
 			if (CURRENT[1] < CURRENT[2]):
-				CURRENT[1] =  CURRENT[1]+1
+				CURRENT[1] += 1
 				self.__cellulesModifiables[k] = CURRENT
 				self.__selected.changeVal(CURRENT[1])
 				if (self.__listError.getNb() == 0):
@@ -255,7 +256,6 @@ class Grille:
 			else:
 				CURRENT[1] = 0
 				self.__cellulesModifiables[k] = CURRENT
-				self.__selected.changeVal(0)
 				self.__selected.changeVal("")
 				k = k - 1
 #endregion

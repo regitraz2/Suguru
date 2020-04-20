@@ -324,7 +324,6 @@ class Grille:
 				self.__selected.draw("out")
 
 		self.__selected = obj #selectionne la case
-		self.checkErrors()
 		self.__selected.bgYellow() #met la couleur a jaune
 
 	def getSelected(self):

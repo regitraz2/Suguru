@@ -244,7 +244,7 @@ class Grille:
 					self.__cellulesModifiables.append([c,0,c.getGrp().getNbElem()])
 					length += 1
 		k = 0
-		while (not self.__solved):
+		while (not self.__solved and k < length):
 			CURRENT = self.__cellulesModifiables[k]
 			self.setSelected(CURRENT[0])
 			if (CURRENT[1] < CURRENT[2]):

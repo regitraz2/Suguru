@@ -165,7 +165,8 @@ class Case:
 #region Autre
 	#modifie la valeur de num (celle qui est affiché sur le bouton)
 	def changeVal(self, num):
-		self.setNum(num)
-		self.grille.victory()
-		self.grille.checkErrors()
+		if self.grille.getSolved() == False: #si la grille n'est pas résolue
+			self.setNum(num)
+			self.grille.checkErrors()
+			self.grille.victory()
 #endregion

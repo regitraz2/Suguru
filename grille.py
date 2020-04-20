@@ -11,6 +11,7 @@ class Grille:
 		#attributs
 		self.menu = menu
 		self.__window = window #fenetre dans laquelle est la grille
+		self.__solved = False #Bloque la grille quand on gagne
 		self.__n = 0 #taille de la grille
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
@@ -30,6 +31,7 @@ class Grille:
 		self.menu = menu
 		self.__window = window #fenetre dans laquelle est la grille
 		self.__n = 0 #taille de la grille
+		self.__solved = False #Bloque la grille quand on gagne
 		self.__selected = None #case selectionnée
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
@@ -207,6 +209,7 @@ class Grille:
 	def victory(self):
 		if(self.__listError.getNb() == 0 and self.remplie()): #si le grille est remplie et qu'il n'y a pas d'erreur : on gagne
 			self.create_label_victory()
+			self.__solved = True
 		else:
 			return False
 
@@ -241,6 +244,7 @@ class Grille:
 					self.__cellulesModifiables.append([c,0,c.getGrp().getNbElem()])
 		k = 0
 		while (not self.victory()) and (k < len(self.__cellulesModifiables)):
+			print(self.__listError.getNb())
 			CURRENT = self.__cellulesModifiables[k]
 			self.setSelected(CURRENT[0])
 			if (CURRENT[1] < CURRENT[2]):
@@ -330,7 +334,8 @@ class Grille:
 
 	def getSelected(self):
 		return self.__selected
-
+	def getSolved(self):
+		return self.__solved
 	def load_menu(self):
 		try: #si on a gagné, detruit le message de victoire
 			self.fram_victory.destroy()

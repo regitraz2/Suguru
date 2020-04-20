@@ -231,7 +231,7 @@ class Grille:
 		self.btn_back.place(relx = 0.75, y = 5, width = 100, height = 40)
 
 	def open_regle(self):
-		self.frame_regle = Frame(width=400, height=400, bg="#ecffd7")
+		self.frame_regle = Frame(width=400, height=420, bg="#ecffd7")
 		self.frame_regle.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 		photo = PhotoImage(file = "image/croix.png")
@@ -260,6 +260,9 @@ class Grille:
 
 		r5 = Label(self.frame_regle, text = "En orange : les doublons dans une région", font=("Courrier", 11), wraplength=300, bg = "#ecffd7")
 		r5.place(relx = 0.5, y = 330, anchor = CENTER)
+
+		r6 = Label(self.frame_regle, text = "En bleu : les cases dont le numero dépasse le max de la région (ex: une region de 3 cases ne peut contenir de numéro > 3)", font=("Courrier", 11), wraplength=300, bg = "#ecffd7")
+		r6.place(relx = 0.5, y = 375, anchor = CENTER)
 
 	def destroy_regle(self):
 		self.frame_regle.destroy()
@@ -294,6 +297,8 @@ class Grille:
 		self.checkErrors()
 		self.__selected.bgYellow() #met la couleur a jaune
 
+	def getSelected(self):
+		return self.__selected
 
 	def load_menu(self):
 		try: #si on a gagné, detruit le message de victoire
@@ -311,14 +316,19 @@ class Grille:
 	#affiche les 5 boutons permettant de changer la valeur d'une case
 	def load_down_pad(self):
 		self.frame2 = Frame(self.__window)
-		for i in range(5):
-			# Comme __selected est initialiser a None, on ne peut pas faire self.__selected.changeVal(i)) sans déclenché une erreur
-			# le try n'est utile que lorsque l'on a pas selectionnée de case
-			try:
-				Button(self.frame2, text="{}".format(i+1), width=5, height=2, command=lambda j=i+1: self.__selected.changeVal(j)).grid(row=0, column=i)
-			except:
-				pass
+		try:
+			for i in range(5):
+				Button(self.frame2, text="{}".format(i+1), width=5, height=2, command=lambda j=i+1: self.changeVal(j)).grid(row=0, column=i)
+			Button(self.frame2, text="", width=5, height=2, command=lambda j="": self.changeVal(j)).grid(row=0, column=5)
+		except:
+			pass
+
 		self.frame2.place(relx=0.5, rely=0.90, anchor=CENTER)
+
+	# si une case est selectionnée, on change son numero
+	def changeVal(self, j):
+		if self.__selected != None:
+			self.__selected.changeVal(j)
 
 
 	def btn_retour(self) :

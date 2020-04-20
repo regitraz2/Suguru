@@ -227,10 +227,10 @@ class Grille:
 
 	#endregion
 
-#region Affichage des règles
+#region Solution brute
 	def btn_solve(self) :
 		self.btn_solve = Button(self.__window, text = "Résoudre brute", font = ("Courrier", 20), fg = '#b62546', command = self.solve)
-		self.btn_solve.place(relx = 0.32, y = 5, width = 150, height = 40)
+		self.btn_solve.place(relx = 0.5, y = 25, width = 200, height = 40, anchor=CENTER)
 
 	def solve(self):
 		self.__cellulesModifiables = []
@@ -255,7 +255,9 @@ class Grille:
 				self.__selected.changeVal(0)
 				self.__selected.changeVal("")
 				k = k - 1
+#endregion
 
+	# region Affichage des règles
 	def btn_regles(self) :
 		self.btn_back = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
 		self.btn_back.place(relx = 0.75, y = 5, width = 100, height = 40)

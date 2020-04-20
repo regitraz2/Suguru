@@ -27,4 +27,5 @@ class Group:
 	def getListe(self):
 		return self.__list
 	def getNbElem(self):
-		return self.__nbElem
+
+		return len(self.__list)

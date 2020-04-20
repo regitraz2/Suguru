@@ -41,6 +41,8 @@ class Grille:
 		self.btn_retour() # pour retourner au menu
 		self.load_down_pad() #charge le pad pour entrer les chiffres dans la grille
 		self.btn_regles() #affiche les règles
+		self.btn_solve() # boutton pour résoudre la grille
+
 
 		self.pack_frame() #l'affiche
 
@@ -226,6 +228,34 @@ class Grille:
 	#endregion
 
 #region Affichage des règles
+	def btn_solve(self) :
+		self.btn_solve = Button(self.__window, text = "Résoudre brute", font = ("Courrier", 20), fg = '#b62546', command = self.solve)
+		self.btn_solve.place(relx = 0.32, y = 5, width = 150, height = 40)
+
+	def solve(self):
+		self.__cellulesModifiables = []
+		for i in range(self.__n):
+			for j in range(self.__n):
+				c = self.__matrice[i][j]
+				if (c.getEstModif()):
+					self.__cellulesModifiables.append([c,0,c.getGrp().getNbElem()])
+		k = 0
+		while (not self.victory()) and (k < len(self.__cellulesModifiables)):
+			CURRENT = self.__cellulesModifiables[k]
+			self.setSelected(CURRENT[0])
+			if (CURRENT[1] < CURRENT[2]):
+				CURRENT[1] =  CURRENT[1]+1
+				self.__cellulesModifiables[k] = CURRENT
+				self.__selected.changeVal(CURRENT[1])
+				if (self.__listError.getNb() == 0):
+					k = k + 1
+			else:
+				CURRENT[1] = 0
+				self.__cellulesModifiables[k] = CURRENT
+				self.__selected.changeVal(0)
+				self.__selected.changeVal("")
+				k = k - 1
+
 	def btn_regles(self) :
 		self.btn_back = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
 		self.btn_back.place(relx = 0.75, y = 5, width = 100, height = 40)
@@ -308,6 +338,7 @@ class Grille:
 		#detruit toute la grille
 		self.frame2.destroy()
 		self.btn_back.destroy()
+		self.btn_solve.destroy()
 		self.__frame.destroy()
 		#affiche le menu
 		self.menu.load_menu()

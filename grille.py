@@ -240,17 +240,21 @@ class Grille:
 				if (c.getEstModif()):
 					self.__cellulesModifiables.append([c,0,c.getGrp().getNbElem()])
 		k = 0
-		while (not self.victory()):
+		while (not self.victory()) and (k < len(self.__cellulesModifiables)):
 			CURRENT = self.__cellulesModifiables[k]
 			self.setSelected(CURRENT[0])
 			if (CURRENT[1] < CURRENT[2]):
 				CURRENT[1] =  CURRENT[1]+1
+				self.__cellulesModifiables[k] = CURRENT
 				self.__selected.changeVal(CURRENT[1])
 				if (self.__listError.getNb() == 0):
 					k = k + 1
 			else:
 				CURRENT[1] = 0
-				k = k + 1
+				self.__cellulesModifiables[k] = CURRENT
+				self.__selected.changeVal(0)
+				self.__selected.changeVal("")
+				k = k - 1
 
 	def btn_regles(self) :
 		self.btn_back = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
@@ -329,6 +333,7 @@ class Grille:
 		#detruit toute la grille
 		self.frame2.destroy()
 		self.btn_back.destroy()
+		self.btn_solve.destroy()
 		self.__frame.destroy()
 		#affiche le menu
 		self.menu.load_menu()

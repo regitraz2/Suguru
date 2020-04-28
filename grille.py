@@ -621,8 +621,8 @@ class Grille:
 
 	# region Affichage des règles
 	def btn_regles(self) :
-		self.btn_back = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
-		self.btn_back.place(relx = 0.75, y = 5, width = 100, height = 40)
+		self.btn_regles = Button(self.__window, text = "Règles", font = ("Courrier", 20), fg = '#b62546', command = self.open_regle)
+		self.btn_regles.place(relx = 0.75, y = 5, width = 100, height = 40)
 
 	def open_regle(self):
 		self.frame_regle = Frame(width=400, height=420, bg="#ecffd7")
@@ -703,6 +703,7 @@ class Grille:
 		self.frame2.destroy()
 		self.btn_back.destroy()
 		self.btn_solve.destroy()
+		self.btn_regles.destroy()
 		self.btn_solveInt.destroy()
 		self.__frame.destroy()
 		#affiche le menu

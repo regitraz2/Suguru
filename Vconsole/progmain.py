@@ -1,7 +1,45 @@
+#return true si sc est complet false sinon
+def actuEtat(self):
+	x=0
+	for case in self.listecase:
+		if int(case.val)==0:
+			self.etat=False
+			return
+		else :
+			x+=int(case.val)
+	if int(x)==((int(self.taille)*(int(self.taille)+1))/2):
+		self.etat=True
+	else : return
+
+#renvoi faux si un voisin est egale 
+def EgalVoisin(a,b,y):
+	if bool(Existe((int(a)-1),(int(b)-1))):
+		if int(grille.item((int(a)-1),(int(b)-1)))==int(y):
+			return False
+	if bool(Existe((int(a)-1),(int(b)))):
+		if int(grille.item((int(a)-1),(int(b))))==int(y):
+			return False
+	if bool(Existe((int(a)-1),(int(b)+1))):
+		if int(grille.item((int(a)-1),(int(b)+1)))==int(y):
+			return False
+	if bool(Existe((int(a)),(int(b)-1))):
+		if int(grille.item((int(a)),(int(b)-1)))==int(y):
+			return False
+	if bool(Existe((int(a)),(int(b)+1))):
+		if int(grille.item((int(a)),(int(b)+1)))==int(y):
+			return False
+	if bool(Existe((int(a)+1),(int(b)-1))):
+		if int(grille.item((int(a)+1),(int(b)-1)))==int(y):
+			return False
+	if bool(Existe((int(a)+1),(int(b)))):
+		if int(grille.item((int(a)+1),(int(b))))==int(y):
+			return False
+	if bool(Existe((int(a)+1),(int(b)+1))):
+		if int(grille.item((int(a)+1),(int(b)+1)))==int(y):
+			return False
+	return True
 
 
-
- 
 ####################################### Programme #######################################
 
 Jeu_lance=True

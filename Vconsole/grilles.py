@@ -1,7 +1,5 @@
 import numpy as np
-from classeCase import *
-
-
+from classeSG import *
 
 ################ Grille  ##############
 
@@ -52,34 +50,34 @@ Sgrille.itemset(27,1)
 
 ######## GRILLE 1 ##############
 
-C1=Case(0,0,0,SG1)
-C2=Case(0,0,1,SG1)
-C3=Case(0,0,2,SG1)
-C4=Case(0,0,3,SG1)
-C5=Case(0,1,0,SG2)
-C6=Case(0,1,1,SG1)
-C7=Case(0,1,2,SG3)
-C8=Case(0,1,3,SG4)
-C9=Case(0,2,0,SG5)
-C10=Case(0,2,1,SG3)
-C11=Case(0,2,2,SG3)
-C12=Case(0,2,3,SG4)
-C13=Case(0,3,0,SG5)
-C14=Case(0,3,1,SG4)
-C15=Case(0,3,2,SG4)
-C16=Case(0,3,3,SG4)
-C17=Case(0,4,0,SG5)
-C18=Case(0,4,1,SG6)
-C19=Case(0,4,2,SG4)
-C20=Case(0,4,3,SG7)
-C21=Case(0,5,0,SG5)
-C22=Case(0,5,1,SG6)
-C23=Case(0,5,2,SG6)
-C24=Case(0,5,3,SG7)
-C25=Case(0,6,0,SG6)
-C26=Case(0,6,1,SG6)
-C27=Case(0,6,2,SG6)
-C28=Case(0,6,3,SG7)
+C1=Case(0,0,0)
+C2=Case(4,0,1)
+C3=Case(0,0,2)
+C4=Case(3,0,3)
+C5=Case(0,1,0)
+C6=Case(5,1,1)
+C7=Case(0,1,2)
+C8=Case(4,1,3)
+C9=Case(0,2,0)
+C10=Case(3,2,1)
+C11=Case(1,2,2)
+C12=Case(5,2,3)
+C13=Case(0,3,0)
+C14=Case(0,3,1)
+C15=Case(0,3,2)
+C16=Case(0,3,3)
+C17=Case(0,4,0)
+C18=Case(0,4,1)
+C19=Case(0,4,2)
+C20=Case(0,4,3)
+C21=Case(0,5,0)
+C22=Case(0,5,1)
+C23=Case(5,5,2)
+C24=Case(0,5,3)
+C25=Case(0,6,0)
+C26=Case(1,6,1)
+C27=Case(0,6,2)
+C28=Case(0,6,3)
 
 SG1=SG(False, 5, [C1,C2,C3,C4,C6]) 
 SG2=SG(False, 1, [C5])
@@ -88,3 +86,9 @@ SG4=SG(False, 6, [C8,C12,C14,C15,C16,C19])
 SG5=SG(False, 4, [C9,C13,C17,C21])
 SG6=SG(False, 6, [C18,C22,C23,C25,C26,C27])
 SG7=SG(False, 3, [C20,C24,C28])
+
+
+#def Const(x,y):
+#	if (int(x)==0 and int(y)==1) or (int(x)==6 and int(y)==1) or (int(x)==1 and int(y)==1) or (int(x)==2 and int(y)==1) or (int(x)==2 and int(y)==2) or (int(x)==2 and int(y)==3) or (int(x)==1 and int(y)==3) or (int(x)==0 and int(y)==3) or (int(x)==5 and int(y)==2):
+#		return True
+#	else : return False

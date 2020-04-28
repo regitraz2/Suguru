@@ -1,0 +1,56 @@
+#coding:utf-8
+
+import numpy as np
+from classeSG import *
+
+grille = np.zeros((6,6), dtype=int)
+
+C1=Case(0,0,0)
+C2=Case(5,0,1)
+C3=Case(0,0,2)
+C4=Case(0,0,3)
+C5=Case(0,0,4)
+C6=Case(5,0,5)
+C7=Case(0,1,0)
+C8=Case(0,1,1)
+C9=Case(0,1,2)
+C10=Case(0,1,3)
+C11=Case(0,1,4)
+C12=Case(0,1,5)
+C13=Case(4,2,0)
+C14=Case(0,2,1)
+C15=Case(3,2,2)
+C16=Case(0,2,3)
+C17=Case(0,2,4)
+C18=Case(4,2,5)
+C19=Case(0,3,0)
+C20=Case(2,3,1)
+C21=Case(0,3,2)
+C22=Case(0,3,3)
+C23=Case(0,3,4)
+C24=Case(0,3,5)
+C25=Case(0,4,0)
+C26=Case(0,4,1)
+C27=Case(0,4,2)
+C28=Case(0,4,3)
+C29=Case(0,4,4)
+C30=Case(0,4,5)
+C31=Case(0,5,0)
+C32=Case(0,5,1)
+C33=Case(0,5,2)
+C34=Case(4,5,3)
+C35=Case(0,5,4)
+C36=Case(2,5,5)
+
+SG1=SG(False, 5, [C1,C2,C3,C4,C7]) 
+SG2=SG(False, 1, [C5])
+SG3=SG(False, 5, [C6,C11,C12,C17,C18])
+SG4=SG(False, 5, [C8,C13,C14,C19,C25])
+SG5=SG(False, 4, [C9,C10,C15,C16])
+SG6=SG(False, 5, [C20,C21,C26,C27,C28])
+SG7=SG(False, 4, [C22,C23,C24,C29])
+SG8=SG(False, 2, [C31,C32])
+SG9=SG(False, 5, [C30,C33,C34,C35,C36])
+
+
+# modif = fonc const + existe + fin algo

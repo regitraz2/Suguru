@@ -9,6 +9,7 @@ class Case:
 		self.__estModifiable = estModifiable #dit si la case est modifiable
 		self.__nom = nom #nom de la case
 		self.setNum(num) #on met la valeur de num dans __num
+		self.poss = None
 
 		#permet de changer la couleur uniquement si il n'y a pas d'erreur, lors de la suppression d'une erreur ce parametre change
 		#peprmet aussi de faire une sorte de file de priorité des erreur : un erreur de groupe est affiche si il n'y a pas d'erreur d'adjascence
@@ -144,6 +145,8 @@ class Case:
 		self.__border_bottom = val
 	def setErr(self, val):
 		self.__hasError = val
+	def setPoss(self, l):
+		self.poss = l
 
 	def getNum(self):
 		return self.__num.get()
@@ -159,6 +162,8 @@ class Case:
 		return self.__j
 	def getErr(self):
 		return self.__hasError
+	def getPoss(self):
+		return self.poss
 #endregion
 
 

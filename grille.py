@@ -3,6 +3,7 @@ from case import Case
 from group import Group
 from errors import *
 from tools import *
+from config import *
 
 
 class Grille:
@@ -17,6 +18,8 @@ class Grille:
 		self.__matrice = [] #matrices des cases
 		self.__list_group = [] #liste des groupe
 		self.__listError = listErrors()
+		self.btn_solveInt() # boutton pour résoudre la grille Int
+		self.btn_solve() # boutton pour résoudre la grille
 
 		self.create_frame()
 
@@ -44,7 +47,7 @@ class Grille:
 		self.load_down_pad() #charge le pad pour entrer les chiffres dans la grille
 		self.btn_regles() #affiche les règles
 		self.btn_solve() # boutton pour résoudre la grille
-
+		self.btn_solveInt() # boutton pour résoudre la grille Int
 
 		self.pack_frame() #l'affiche
 
@@ -234,6 +237,362 @@ class Grille:
 		self.btn_solve = Button(self.__window, text = "Résoudre brute", font = ("Courrier", 20), fg = '#b62546', command = self.solve)
 		self.btn_solve.place(relx = 0.5, y = 25, width = 200, height = 40, anchor=CENTER)
 
+	def btn_solveInt(self) :
+		self.btn_solveInt = Button(self.__window, text = "Résoudre Int", font = ("Courrier", 20), fg = '#b62546', command = self.solveInt)
+		self.btn_solveInt.place(relx = 0.5, y = 65, width = 200, height = 40, anchor=CENTER)
+
+########################################################### Fonctions Resolution Int #####################################################################
+		
+	def Existe(self,x,y):
+		if int(x)<0 or int(x)>(int(self.__n)-1) or int(y)<0 or int(y)>(int(self.__n)-1) :
+			return False 
+		return True 
+
+	#retourne la case en fonction de deux coordonnées
+	def getCase(self,x,y):
+		for ssg in self.__list_group:
+			for case in ssg.getListe():				
+				if int(case.getI())==int(x) and int(case.getJ())==int(y):
+					return case
+	
+	#liste de cases voisines
+	def casevoisine(self,case):
+		x=int(case.getI())
+		y=int(case.getJ())
+
+		listecv=[]
+	
+		if bool(self.Existe((x-1),(y-1))):
+			listecv.append(self.getCase((x-1),(y-1)))		
+	
+		if bool(self.Existe((x),(y-1))):
+			listecv.append(self.getCase((x),(y-1)))		
+	
+		if bool(self.Existe((x+1),(y-1))):
+			listecv.append(self.getCase((x+1),(y-1)))				
+	
+		if bool(self.Existe((x-1),(y))):
+			listecv.append(self.getCase((x-1),(y)))			
+	
+		if bool(self.Existe((x+1),(y))):
+			listecv.append(self.getCase((x+1),(y)))			
+	
+		if bool(self.Existe((x-1),(y+1))):
+			listecv.append(self.getCase((x-1),(y+1)))			
+	
+		if bool(self.Existe((x),(y+1))):
+			listecv.append(self.getCase((x),(y+1)))				
+	
+		if bool(self.Existe((x+1),(y+1))):
+			listecv.append(self.getCase((x+1),(y+1)))		
+	
+		return listecv
+
+
+
+
+	#controle
+	def controle(self):	
+		for ssg in self.__list_group:
+			n=0
+			for case in ssg.getListe():
+				self.setSelected(case)
+				if self.__selected.getNum()=="":
+					if len(self.__selected.getPoss())==1 :
+						self.__selected.changeVal(int(self.__selected.getPoss()[0]))
+					else:
+						cv = self.casevoisine(self.__selected)
+						for caseg in ssg.getListe():
+							if self.__selected != caseg and (caseg not in cv) :
+								cv.append(caseg)
+						for casev in cv:
+							if casev.getNum()!="":
+								if int(casev.getNum()) in self.__selected.getPoss():
+									l = self.__selected.getPoss()
+									l.remove(int(casev.getNum()))
+									self.__selected.setPoss(l)
+		
+				else: 
+					cv = self.casevoisine(self.__selected)
+					for caseg in ssg.getListe():
+						if caseg != self.__selected and caseg not in cv:
+							cv.append(caseg)
+					for casev in cv:
+						if int(self.__selected.getNum()) in casev.getPoss():
+							l = casev.getPoss()
+							l.remove(int(self.__selected.getNum()))
+							casev.setPoss(l)
+					n+=1
+			if n==int(ssg.getNbElem()):
+				ssg.setEtat(True)
+
+	
+	#Techiques de resoltion
+
+	def fullblock(self,ssg):
+		for case in ssg.getListe() :
+			self.setSelected(case)
+			if self.__selected.getNum()=="" and len(self.__selected.getPoss())==1 :
+				self.__selected.changeVal(int(self.__selected.getPoss()[0]))
+
+	def unique(self,ssg):
+		for case in ssg.getListe() :
+			self.setSelected(case)
+			if self.__selected.getNum()=="":
+				for p in self.__selected.getPoss():
+					if int(ssg.nbpossLSG(p))==1:
+						self.__selected.setPoss([int(p)])
+						self.__selected.changeVal(int(p))
+						break
+
+	def crown(self,ssg):
+		for case in ssg.getListe():
+			self.setSelected(case)
+			if self.__selected.getNum()=="":
+				cv = self.casevoisine(self.__selected)
+				for caseg in ssg.getListe():
+					if caseg != self.__selected and (caseg not in cv):
+						cv.append(caseg)
+				for c in cv:
+					if c.getNum() != "" and (int(c.getNum()) in self.__selected.getPoss()) :
+						l = self.__selected.getPoss()
+						l.remove(int(c.getNum()))
+						self.__selected.setPoss(l)
+
+
+	def Round234(self,ssg):
+		for case in ssg.getListe():
+			self.setSelected(case)
+			if self.__selected.getNum()=="":
+				for p in self.__selected.getPoss() :
+					cv = self.casevoisine(self.__selected)
+					for cctr in cv:
+						if cctr in ssg.getListe():
+							cv.remove(cctr)
+					for c in cv :
+						voisine = []
+						pasvoisine = []
+						for v in c.getGrp().getListe() :					
+							if v in cv:
+								voisine.append(v)
+							else :
+								if p in v.getPoss() :
+									break
+								else: 
+									pasvoisine.append(v)
+						if len(voisine)>1 and (int(len(voisine))+int(len(pasvoisine))) == int(c.getGrp().getNbElem()):
+							x=0
+							for voi in voisine :
+								if p in voi.getPoss() :
+									x=x+1
+							if x>1 and p in self.__selected.getPoss():
+								l = self.__selected.getPoss()
+								l.remove(int(p))
+								self.__selected.setPoss(l)
+
+	def	SimpleNakedPair(self,ssg):
+		pair=[]
+		otr=[]
+		for case in ssg.getListe():
+			if len(case.getPoss())==2 :
+				pair.append(case)
+			else : otr.append(case)
+		if len(pair)==2 and int(pair[0].getPoss()[0])==int(pair[1].getPoss()[0]) and int(pair[0].getPoss()[1])==int(pair[1].getPoss()[1]):
+			for case in otr:
+				self.setSelected(case)
+				if self.__selected.getNum()=="":
+					for p in self.__selected.getPoss():
+						if int(p)==int(pair[0].getPoss()[0]) or int(p)==int(pair[0].getPoss()[1]):
+							l = self.__selected.getPoss()
+							l.remove(int(p))
+							self.__selected.setPoss(l)
+
+	def SimpleHiddenPair(self,ssg): 
+		for case in ssg.getListe():
+			self.setSelected(case)
+			pair=[]
+			numerospair=[]
+			if self.__selected.getNum()=="" :
+				for p in self.__selected.getPoss():
+					if int(ssg.nbpossLSG(p))==2 and p not in numerospair:
+						numerospair.append(p)
+				if len(numerospair)==2:
+					for casev in ssg.getListe():
+						if int(numerospair[0]) in casev.getPoss() and int(numerospair[1]) in casev.getPoss() and casev not in pair :
+							pair.append(casev)
+					if len(pair)==2:
+						for c in pair:
+							for q in c.getPoss():
+								if q not in numerospair:	
+									l = c.getPoss()
+									l.remove(int(q))
+									c.setPoss(l)
+	def NakedSingle(self,ssg):
+		for case in ssg.getListe():
+			self.setSelected(case)
+			if len(self.__selected.getPoss())==1 and self.__selected.getNum()=="" :
+				self.__selected.changeVal(int(self.__selected.getPoss()[0]))
+	
+	def HiddenSingle(self,ssg):
+		for i in range(1,int(ssg.getNbElem())+1):
+			if int(ssg.nbpossLSG(int(i)))==1:
+				for case in ssg.getListe():
+					self.setSelected(case)
+					if self.__selected.getNum()=="":
+						if int(i) in self.__selected.getPoss():
+							self.__selected.changeVal(int(i))
+							self.__selected.setPoss([int(i)])
+				
+	def NakedPairB(self,ssg):
+		for case in ssg.getListe():
+			self.setSelected(case)
+			if len(self.__selected.getPoss())==2 and self.__selected.getNum()=="":
+				cv = self.casevoisine(self.__selected)
+				for casev in cv:
+					if len(casev.getPoss())==2 and int(casev.getPoss()[0])==int(self.__selected.getPoss()[0]) and int(casev.getPoss()[1])==int(self.__selected.getPoss()[1]) and casev.getGrp() != self.__selected.getGrp():
+						cv2 = self.casevoisine(casev)
+						for v in cv :
+							if v != casev and v in cv2 :
+								for p in v.getPoss():
+									if int(p) in self.__selected.getPoss():
+										l = v.getPoss()
+										l.remove(int(p))
+										v.setPoss(l)
+
+
+	def SameValueCells(self,ssg):
+		for case in ssg.getListe():
+			if case.getNum()=="":
+				cv = self.casevoisine(case)
+				for w in cv:
+					if w.getGrp() == case.getGrp() :
+						cv.remove(w)
+				for casev in cv:
+					voisine=[]
+					pasvoisine=[]
+					for v in casev.getGrp().getListe():
+						if v in cv :
+							voisine.append(v)
+						else :
+							pasvoisine.append(v)
+					if (len(voisine)+len(pasvoisine))==int(casev.getGrp().getNbElem()) and len(pasvoisine)==1 :
+						n=0
+						for p in case.getPoss():
+							if p in pasvoisine[0].getPoss():
+								n+=1
+						if n==len(case.getPoss()):
+							pasvoisine[0].setPoss(case.getPoss())
+
+	def XYWing(self,ssg):
+		for case in ssg.getListe():
+			self.setSelected(case)
+			if len(self.__selected.getPoss())==2 and self.__selected.getNum()=="":
+				cv = self.casevoisine(self.__selected)
+				serres=[]
+				for casev in cv:
+					if len(casev.getPoss())==2 and casev not in cv:
+						serres.append(casev)
+				for v in serres :
+					p = int(v.getPoss()[0])
+					q = int(v.getPoss()[1])
+					for v2 in serres:
+						if v2 != v :
+							if (p in self.__selected.getPoss() and q in v2.getPoss()) or (q in self.__selected.getPoss() and p in v2.getPoss()) :
+								cvv1 = self.casevoisine(v)
+								cvv2 = self.casevoisine(v2)
+								for e in cvv1:
+									if e in cvv2:
+										if (p in self.__selected.getPoss() and q in v2.getPoss()) and q in e.getPoss():
+											l = e.getPoss()
+											l.remove(int(q))
+											e.setPoss(l)
+										if p in e.getPoss() and (q in self.__selected.getPoss() and p in v2.getPoss()) :
+											l = e.getPoss()
+											l.remove(int(p))
+											e.setPoss(l)
+
+		######################################## Prog de résolution #############################################
+	def solveInt(self):
+		
+		for gp in self.__list_group:
+			for case in gp.getListe():
+				self.setSelected(case)
+				if bool(self.__selected.getEstModif()):
+					self.__selected.setPoss([int(i) for i in range(1,int(gp.getNbElem())+1)])
+				else : self.__selected.setPoss([int(self.__selected.getNum())])
+			
+		while not self.__solved:
+			for ssg in self.__list_group:
+				if not bool(ssg.getEtat()):				
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.fullblock(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.unique(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()	
+					if bool(ssg.getEtat()):
+						continue
+					self.crown(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.Round234(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.SimpleNakedPair(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.SimpleHiddenPair(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.NakedSingle(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.HiddenSingle(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.NakedPairB(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.SameValueCells(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+					if bool(ssg.getEtat()):
+						continue
+					self.XYWing(ssg)
+					if bool(ssg.getEtat()):
+						continue
+					self.controle()
+		
+		
 	def solve(self):
 		self.__cellulesModifiables = []
 		length = 0
@@ -344,6 +703,7 @@ class Grille:
 		self.frame2.destroy()
 		self.btn_back.destroy()
 		self.btn_solve.destroy()
+		self.btn_solveInt.destroy()
 		self.__frame.destroy()
 		#affiche le menu
 		self.menu.load_menu()

@@ -2,7 +2,7 @@ from tkinter import *
 from rdb import Rdb
 
 
-class Options:
+class Level:
     def __init__(self, window, menu):
         self.window = window  # la fenetre dans laquelle seront afficher les options
         self.rdb_list = []  # liste des radiobutton
@@ -12,11 +12,11 @@ class Options:
         self.frame.pack(expand=YES, side=TOP)
 
         # par default, on affiche les options
-        self.load_opt()
+        self.load_lvl()
 
     # charge l'affichage des option
 
-    def load_opt(self):
+    def load_lvl(self):
         self.label_title()
         self.btn_retour()
         self.create_rdBtn_group()
@@ -29,54 +29,39 @@ class Options:
         file.close()
         length = len(lines)
 
+        # on créer un radiobutton pour la generation automatique
+        k = 1  # correspond au numero du radiobutton créer
+        for i in range(length):  # pour chaque lignes
+            # si la ligne comence par cfg
+            if lines[i][0:3] == "lvl":
+                # on créer un radiobutton
+                self.create_radioBtn("Niveau "+str(k), "lvl"+str(k))
+                k += 1
+
+        # on definit le bouton selectionné
         file = open("opt.cfg", "r")
 
         for line in file:
             # coupe la chaine de caractere en deux
             if line[0] != "#" and line.split("=")[0] == "level":
                 lvl = line.split("=")[1].rstrip()
-                break
-
-        # on créer un radiobutton pour la generation automatique
-        #self.create_radioBtn("Aléatoire", "None")
-        k = 1  # correspond au numero du radiobutton créer
-        for i in range(length):  # pour chaque lignes
-            # si la ligne comence par cfg
-            if lines[i].rstrip() == lvl:
-                # on créer un radiobutton
-                break
-        while (i < length):  # pour chaque lignes
-            # si la ligne comence par cfg
-            if lines[i][0:3] == "cfg":
-                # on créer un radiobutton
-                self.create_radioBtn("Config "+str(k), "cfg"+str(k))
-                k += 1
-            if lines[i+1][0:3] == "lvl":
-                break
-            i += 1
-
-        # on definit le bouton selectionné
-        for line in file:
-            # coupe la chaine de caractere en deux
-            if line[0] != "#" and line.split("=")[0] == "config":
-                cfg = line.split("=")[1].rstrip()
                 for x in self.rdb_list:
-                    if x.cfg == cfg:
+                    if x.lvl == lvl:
                         x.select()
         file.close()
 
     # créer un radiobouton
 
-    def create_radioBtn(self, name, cfg):
-        # sur click appele la fonction write_opt_cfg() qui réécrit le fichier opt.cfg avec la nouvelle config
-        rdb = Rdb(name, cfg, None, self.frame)
+    def create_radioBtn(self, name, lvl):
+        # sur click appele la fonction write_opt_lvl() qui réécrit le fichier opt.cfg avec la nouvelle config
+        rdb = Rdb(name, None, lvl, self.frame)
 
         self.rdb_list.append(rdb)  # on l'ajoute dans la liste des radiobutton
 
     # affiche le titre
 
     def label_title(self):
-        label_title = Label(self.frame, text="OPTIONS",
+        label_title = Label(self.frame, text="NIVEAUX",
                             font=("Courrier", 40), fg='#563535')
         label_title.pack(anchor=N)
 

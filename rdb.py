@@ -2,7 +2,9 @@ from tkinter import *
 
 
 class Rdb:
-    def __init__(self, name, cfg, lvl, frame):
+    def __init__(self, name, cfg, lvl, origin):
+        self.origin = origin
+        frame = self.origin.frame
         self.name = name
         self.cfg = cfg  # on en a besoin pour retrouver le "bon" radiobutton et le selectionner par default
         self.lvl = lvl  # on en a besoin pour retrouver le "bon" radiobutton et le selectionner par default
@@ -19,6 +21,7 @@ class Rdb:
         lines = file.readlines()
         length = len(lines)
         file.close()
+        self.origin.setSelected()
 
         for i in range(length):  # on parcourt le fichier
             # coupe la chaine de caractere en deux

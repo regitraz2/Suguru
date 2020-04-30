@@ -7,6 +7,7 @@ class Options:
         self.window = window  # la fenetre dans laquelle seront afficher les options
         self.rdb_list = []  # liste des radiobutton
         self.menu = menu
+        self.__selected = False
 
         self.frame = Frame()
         self.frame.pack(expand=YES, side=TOP)
@@ -18,9 +19,10 @@ class Options:
 
     def load_opt(self):
         self.label_title()
-        self.btn_retour()
         self.create_rdBtn_group()
-        self.btn_jouer()
+        if self.__selected:
+            self.btn_retour()
+            self.btn_jouer()
 
     # créer un groupe de radiobouton
     def create_rdBtn_group(self):
@@ -64,6 +66,7 @@ class Options:
                 cfg = line.split("=")[1].rstrip()
                 for x in self.rdb_list:
                     if x.cfg == cfg:
+                        self.__selected = True
                         x.select()
         file.close()
 
@@ -71,7 +74,7 @@ class Options:
 
     def create_radioBtn(self, name, cfg):
         # sur click appele la fonction write_opt_cfg() qui réécrit le fichier opt.cfg avec la nouvelle config
-        rdb = Rdb(name, cfg, None, self.frame)
+        rdb = Rdb(name, cfg, None, self)
 
         self.rdb_list.append(rdb)  # on l'ajoute dans la liste des radiobutton
 
@@ -104,6 +107,16 @@ class Options:
         self.btn_jouer.destroy()
         self.frame.destroy()
         self.menu.create_grid()
+    def setSelected(self):
+        if ( not self.__selected ):
+            self.__selected = True
+            self.btn_retour()
+            self.btn_jouer()
+
+
+
+
+
 
 
 

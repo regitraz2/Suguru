@@ -54,7 +54,7 @@ class Level:
 
     def create_radioBtn(self, name, lvl):
         # sur click appele la fonction write_opt_lvl() qui réécrit le fichier opt.cfg avec la nouvelle config
-        rdb = Rdb(name, None, lvl, self.frame)
+        rdb = Rdb(name, None, lvl, self)
 
         self.rdb_list.append(rdb)  # on l'ajoute dans la liste des radiobutton
 

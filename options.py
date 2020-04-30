@@ -39,19 +39,20 @@ class Options:
 
         # on créer un radiobutton pour la generation automatique
         #self.create_radioBtn("Aléatoire", "None")
-        k = 1  # correspond au numero du radiobutton créer
+        # correspond au numero du radiobutton créer
         for i in range(length):  # pour chaque lignes
             # si la ligne comence par cfg
             if lines[i].rstrip() == lvl:
                 # on créer un radiobutton
                 break
+        i += 1
         while (i < length):  # pour chaque lignes
             # si la ligne comence par cfg
             if lines[i][0:3] == "cfg":
                 # on créer un radiobutton
-                self.create_radioBtn("Config "+str(k), "cfg"+str(k))
-                k += 1
-            if lines[i+1][0:3] == "lvl":
+                self.create_radioBtn("Grille "+lines[i][3:].rstrip(' \n'), "cfg"+lines[i][3:].rstrip(' \n'))
+
+            if lines[i][0:3] == "lvl":
                 break
             i += 1
 

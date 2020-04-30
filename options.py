@@ -20,6 +20,7 @@ class Options:
         self.label_title()
         self.btn_retour()
         self.create_rdBtn_group()
+        self.btn_jouer()
 
     # créer un groupe de radiobouton
     def create_rdBtn_group(self):
@@ -89,5 +90,22 @@ class Options:
 
     def load_menu(self):
         self.btn_back.destroy()
+        self.btn_jouer.destroy()
         self.frame.destroy()
         self.menu.load_menu()
+
+    def btn_jouer(self):
+        self.btn_jouer = Button(self.window, text="Jouer", font=(
+            "Courrier", 20), fg='#b62546', command=self.play)
+        self.btn_jouer.place(relx=0.87, y=25, width=100, height=40, anchor=CENTER)
+
+    def play(self):
+        self.btn_back.destroy()
+        self.btn_jouer.destroy()
+        self.frame.destroy()
+        self.menu.create_grid()
+
+
+
+
+

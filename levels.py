@@ -67,11 +67,12 @@ class Level:
 
     # recharge le menu
     def btn_retour(self):
-        self.btn_back = Button(self.window, text="Menu", font=(
+        self.btn_back = Button(self.window, text="Grilles", font=(
             "Courrier", 20), fg='#b62546', command=self.load_menu)
-        self.btn_back.place(x=5, y=5, width=80, height=40)
+        self.btn_back.place(relx=0.5, rely=0.9, width=200, height=40, anchor=CENTER)
+
 
     def load_menu(self):
         self.btn_back.destroy()
         self.frame.destroy()
-        self.menu.load_menu()
+        self.menu.load_option()

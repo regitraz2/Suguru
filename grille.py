@@ -23,24 +23,136 @@ class Grille:
 
         self.create_frame()
 
-        self.load_config(cfg)  # charge la grille selectionné dans les options
         self.btn_retour()  # pour retourner au menu
-        self.load_down_pad()  # charge le pad pour entrer les chiffres dans la grille
         self.btn_regles()  # affiche les règles
         self.btn_solve()  # boutton pour résoudre la grille
         self.btn_solveInt()  # boutton pour résoudre la grille Int
+        self.btn_Save()  # boutton pour résoudre la grille Int
+
+        self.popup_load(cfg)
 
         self.pack_frame()  # l'affiche
 
-# region Chargement de la config
+# region Chargement de la config / sauvegarde
+    def popup_load(self, cfg):
+        self.frame_load = Frame(width=100, height=40, bg="#ecffd7")
+        self.frame_load.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        self.btn_yes = Button(self.frame_load, text = "Continuer", font = ("Courrier", 20), fg = '#b62546', command = self.load)
+        self.btn_yes.grid(row=0, column=0)
+        self.btn_no = Button(self.frame_load, text = "Nouvelle", font = ("Courrier", 20), fg = '#b62546', command = lambda : self.load_config(cfg))
+        self.btn_no.grid(row=0, column=1)
+
+
+    def btn_Save(self):
+           self.btn_save = Button(self.__window, text = "Save", font = ("Courrier", 20), fg = '#b62546', command = self.save)
+           self.btn_save.place(relx = 0.862, y = 65, width = 100, height = 40, anchor = CENTER)
+
+    def save(self):
+        if not self.__solved:
+            grille = ""
+            for i in range(self.__n) :
+                sgrid = ""
+                for j in range(self.__m) :
+                    case = self.__matrice[i][j]
+                    num = case.getNum()
+                    if num == "":
+                        num = 0
+                    grp = case.getGrp().getNom()
+                    grp = grp[6:] # enleve "groupe" au debut du nom du groupe
+                    sgrid += "{}:{}:{}, ".format(num, grp, case.getEstModif())
+                grille += sgrid + "\n"
+
+            file = open("save.txt", "w")
+            file.write(grille)
+            file.close()
+        else: #sinon on ecrit rien
+            file = open("save.txt", "w")
+            file.write("")
+            file.close()
+
+
+    def load(self):
+        file = open("save.txt", "r")
+        grille = file.readlines()
+        file.close()
+        if grille == []: # rien n'est sauvegarder
+            return
+
+        for i in range(len(grille)):
+            grille[i] = grille[i].strip()
+
+        grid = []
+        for i in range(len(grille)):
+            sgrid = []
+            truc = None
+            truc = grille[i].split(",")
+            del truc[-1] #le dernier element est '', on le supprime
+            machin = None
+            for j in range(len(truc)):
+                machin = truc[j].split(":")
+                machin[0] = int(machin[0])
+                machin[1] = int(machin[1])
+                machin[2] = True if machin[2] == 'True' else False
+                sgrid.append(machin)
+            grid.append(sgrid)
+
+        print("grille (précédement sauvegardée) chargée : ")
+        affiche1dim(grid)
+        self.__n = len(grid)
+        self.__m = len(grid[0])
+
+        for i in range(self.__n) :
+            sgrid = []  # initialise une ligne
+            for j in range(self.__m) :
+                num = grid[i][j][0]  # chifre de la case
+                numGrp = grid[i][j][1]  # numero du groupe
+                estModif = grid[i][j][2] # si la case est modifiable ou non
+
+                if num == 0:
+                    num = ""
+
+                # creation de la case
+                case = Case(self.__frame, "btn{}{}".format(i, j), num, estModif, i, j, self)
+
+                # placement de la case
+                case.canvas.grid(row = i, column = j)
+
+                # on ajoute la case dans la ligne
+                sgrid.append(case)
+
+                # on met la case dans son groupe
+                self.addInGroup(case, numGrp)
+
+            self.__matrice.append(sgrid)
+            # ajout de la ligne dans la grille
+
+        self.__max = max(grp.getNbElem() for grp in self.__list_group)
+
+        try:
+            self.frame_load.destroy()
+        except:
+            pass
+
+        self.drawGroups()
+        self.load_down_pad()  # charge le pad pour entrer les chiffres dans la grille
+
+        for i in range(self.__n):
+            for j in range(self.__m):
+                self.__selected = self.__matrice[i][j]
+                self.checkErrors()
+
+
     # charge une grille a partir d'un fichier de config
     def load_config(self, cfg):
-        print("grille chargée : ")
-        affiche1dim(cfg)
+        self.frame_load.destroy()
+        #print("grille chargée : ")
+        #affiche1dim(cfg)
 
         # charge et place les widget (cases)
         self.create_config(cfg, len(cfg), len(cfg[0]))
 
+        self.load_down_pad()  # charge le pad pour entrer les chiffres dans la grille
         self.drawGroups()
 
     # charge et place les widget dans la grille
@@ -62,8 +174,7 @@ class Grille:
                     num = ""  # pas de numero pour les autres cases
 
                 # creation de la case
-                case = Case(self.__frame, "btn{}{}".format(
-                    i, j), num, estModifiable, i, j, self)
+                case = Case(self.__frame, "btn{}{}".format(i, j), num, estModifiable, i, j, self)
 
                 # placement de la case
                 case.canvas.grid(row=i, column=j)
@@ -102,27 +213,25 @@ class Grille:
     def drawGroups(self):
         for i in range(self.__n):
             for j in range(self.__m):
-                # si ce n'est pas deux fois la meme case
-                if self.__matrice[i][j].getNom() != self.__matrice[i][j-1].getNom():
-                    # definit les border de la case
-                    if i+1 < self.__n:  # si on est dans la grille on fait le test
-                        if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
-                            self.__matrice[i][j].setBdb(0)
+                # definit les border de la case
+                if i+1 < self.__n:  # si on est dans la grille on fait le test
+                    if self.__matrice[i][j].getGrp() == self.__matrice[i+1][j].getGrp():
+                        self.__matrice[i][j].setBdb(0)
 
-                    if i-1 >= 0:  # si on est dans la grille
-                        if self.__matrice[i][j].getGrp() == self.__matrice[i-1][j].getGrp():
-                            self.__matrice[i][j].setBdt(0)
+                if i-1 >= 0:  # si on est dans la grille
+                    if self.__matrice[i][j].getGrp() == self.__matrice[i-1][j].getGrp():
+                        self.__matrice[i][j].setBdt(0)
 
-                    if j+1 < self.__m:  # si on est dans la grille
-                        if self.__matrice[i][j].getGrp() == self.__matrice[i][j+1].getGrp():
-                            self.__matrice[i][j].setBdr(0)
+                if j+1 < self.__m:  # si on est dans la grille
+                    if self.__matrice[i][j].getGrp() == self.__matrice[i][j+1].getGrp():
+                        self.__matrice[i][j].setBdr(0)
 
-                    if j-1 >= 0:  # si on est dans la grille
-                        if self.__matrice[i][j].getGrp() == self.__matrice[i][j-1].getGrp():
-                            self.__matrice[i][j].setBdl(0)
+                if j-1 >= 0:  # si on est dans la grille
+                    if self.__matrice[i][j].getGrp() == self.__matrice[i][j-1].getGrp():
+                        self.__matrice[i][j].setBdl(0)
 
-                    # dessine les border comme selectionné ci dessus
-                    self.__matrice[i][j].drawBorder()
+                # dessine les border comme selectionné ci dessus
+                self.__matrice[i][j].drawBorder()
     # endregion
 
 # region Gestion des erreur
@@ -233,7 +342,7 @@ class Grille:
 
     # endregion
 
-# region Solution brute
+# region Algo Resolutions
     def btn_solve(self):
         self.btn_solve = Button(self.__window, text="Résoudre brute", font=(
             "Courrier", 20), fg='#b62546', command=self.solve)
@@ -624,7 +733,7 @@ class Grille:
                 k = k - 1
 # endregion
 
-    # region Affichage des règles
+# region Affichage des règles
     def btn_regles(self):
         self.btn_regles = Button(self.__window, text="Règles", font=(
             "Courrier", 20), fg='#b62546', command=self.open_regle)
@@ -722,6 +831,7 @@ class Grille:
         self.btn_solve.destroy()
         self.btn_regles.destroy()
         self.btn_solveInt.destroy()
+        self.btn_save.destroy()
         self.__frame.destroy()
         # affiche le menu
         self.menu.load_menu()

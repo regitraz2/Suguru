@@ -52,12 +52,13 @@ def configFormat(lines, k):
             # pour chaque ':' trouver on regarde ce qu'il y a a gauche et a droite
             if lines[k+i][j] == ":":
                 toappend = getGrpNum(lines[k+i], j-1)
-                # on créer un tableau avec, en 0 le chiffre de la case, en 1 le numero du groupe
+                # on créer un tableau avec, en 0 le chiffre de la case, en 1 le numero du groupe et en 2 un booleen si on charge une grille
                 toappend = toappend.split(":")
 
                 # convertit le tableau en int
-                for z in range(2):
-                    toappend[z] = int(toappend[z])
+                toappend[0] = int(toappend[0])
+                toappend[1] = int(toappend[1])
+
                 sgrid.append(toappend)  # on met ce tableau dans une ligne
         grid.append(sgrid)  # on ajoute la ligne a la matrice
         i += 1

@@ -12,4 +12,3 @@ def affiche2dim(tab2dim):
 		for j in range(m):
 			print(tab2dim[i], end= ", ")
 		print("\n")
-

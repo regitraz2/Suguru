@@ -760,11 +760,11 @@ class Grille:
                       font=("Courrier", 40), bg="#ecffd7")
         titre.place(relx=0.5, y=30, anchor=CENTER)
 
-        r1 = Label(self.frame_regle, text="Une grille contient des régions de taille variant entre 1 et 5 cases", font=(
+        r1 = Label(self.frame_regle, text="Une grille contient des régions de taille variant entre 1 et n cases", font=(
             "Courrier", 14), wraplength=300, bg="#ecffd7")
         r1.place(relx=0.5, y=90, anchor=CENTER)
 
-        r2 = Label(self.frame_regle, text="Chaques région doit contenir tout les chiffre de 1 à n, n étant la taille de la région", font=(
+        r2 = Label(self.frame_regle, text="Chaques région doit contenir tout les chiffre de 1 à m, m étant la taille de la région", font=(
             "Courrier", 14), wraplength=300, bg="#ecffd7")
         r2.place(relx=0.5, y=160, anchor=CENTER)
 
@@ -780,7 +780,7 @@ class Grille:
             "Courrier", 11), wraplength=300, bg="#ecffd7")
         r5.place(relx=0.5, y=330, anchor=CENTER)
 
-        r6 = Label(self.frame_regle, text="En bleu : les cases dont le numero dépasse le max de la région (ex: une region de 3 cases ne peut contenir de numéro > 3)", font=(
+        r6 = Label(self.frame_regle, text="En bleu : les cases dont le numéro dépasse le max de la région (ex: une region de 3 cases ne peut contenir de numéro > 3)", font=(
             "Courrier", 11), wraplength=300, bg="#ecffd7")
         r6.place(relx=0.5, y=375, anchor=CENTER)
 

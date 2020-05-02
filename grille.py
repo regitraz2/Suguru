@@ -35,13 +35,15 @@ class Grille:
 
 # region Chargement de la config / sauvegarde
     def popup_load(self, cfg):
-        self.frame_load = Frame(width=100, height=40, bg="#ecffd7")
+        self.frame_load = Frame(width=100, height=40, bg="#4a9d3c")
         self.frame_load.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        self.btn_yes = Button(self.frame_load, text = "Continuer", font = ("Courrier", 20), fg = '#b62546', command = self.load)
-        self.btn_yes.grid(row=0, column=0)
-        self.btn_no = Button(self.frame_load, text = "Nouvelle", font = ("Courrier", 20), fg = '#b62546', command = lambda : self.load_config(cfg))
-        self.btn_no.grid(row=0, column=1)
+        label = Label(self.frame_load, text="Voulez-vous reprendre la dernière partie sauvegardée ?", font=("Courrier", 15), wraplength=300, bg="#4a9d3c")
+        label.grid(row=0, column=0, columnspan=2)
+        btn_yes = Button(self.frame_load, text = "Continuer", font = ("Courrier", 20), fg = '#b62546', command = self.load)
+        btn_yes.grid(row=1, column=0)
+        btn_no = Button(self.frame_load, text = "Nouvelle", font = ("Courrier", 20), fg = '#b62546', command = lambda : self.load_config(cfg))
+        btn_no.grid(row=1, column=1)
 
 
     def btn_Save(self):

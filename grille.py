@@ -760,11 +760,11 @@ class Grille:
                       font=("Courrier", 40), bg="#ecffd7")
         titre.place(relx=0.5, y=30, anchor=CENTER)
 
-        r1 = Label(self.frame_regle, text="Une grille contient des régions de taille variant entre 1 et n cases", font=(
+        r1 = Label(self.frame_regle, text="Une grille contient des régions de taille >= 1", font=(
             "Courrier", 14), wraplength=300, bg="#ecffd7")
         r1.place(relx=0.5, y=90, anchor=CENTER)
 
-        r2 = Label(self.frame_regle, text="Chaques région doit contenir tout les chiffre de 1 à m, m étant la taille de la région", font=(
+        r2 = Label(self.frame_regle, text="Chaques région doit contenir tout les chiffre de 1 à n, n étant la taille de la région", font=(
             "Courrier", 14), wraplength=300, bg="#ecffd7")
         r2.place(relx=0.5, y=160, anchor=CENTER)
 

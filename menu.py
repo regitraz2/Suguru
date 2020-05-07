@@ -1,6 +1,6 @@
 from tkinter import *
 from grille import Grille
-from options import Options
+from grilles_niveau import Grilles_niveau
 from levels import Level
 from config import *
 
@@ -33,7 +33,7 @@ class Menu:
         # recréer/efface une frame si il y en a deja une, en créer une sinon
         self.frame.destroy()
 
-        self.lvl = Options(self.window, self)
+        self.lvl = Grilles_niveau(self.window, self)
 
     # affiche les options
     def load_lvl(self):
@@ -56,11 +56,7 @@ class Menu:
 
         cfg = getConfig()
         if cfg != "None":
-            self.grille = Grille(self.window, self, cfg)  # charge une config
-
-        else:
-            # self.grille = Grille(self.window) #grille aléatoire
-            print("Pas encore Implémenter")
+            Grille(self.window, self, cfg)  # charge une config
 
 # endregion
 

@@ -2,7 +2,7 @@ from tkinter import *
 from rdb import Rdb
 
 
-class Options:
+class Grilles_niveau:
     def __init__(self, window, menu):
         self.window = window  # la fenetre dans laquelle seront afficher les options
         self.rdb_list = []  # liste des radiobutton
@@ -13,11 +13,11 @@ class Options:
         self.frame.pack(expand=YES, side=TOP)
 
         # par default, on affiche les options
-        self.load_opt()
+        self.load_grilles()
 
     # charge l'affichage des option
 
-    def load_opt(self):
+    def load_grilles(self):
         self.label_title()
         self.create_rdBtn_group()
         if self.__selected:
@@ -107,6 +107,7 @@ class Options:
         self.btn_jouer.destroy()
         self.frame.destroy()
         self.menu.create_grid()
+
     def setSelected(self):
         if ( not self.__selected ):
             self.__selected = True

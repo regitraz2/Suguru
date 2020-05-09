@@ -4,7 +4,7 @@ class Group:
 		self.__nom = nom #nom du groupe
 		self.__listCases = [] #liste des case du groupe
 		self.__nbElem = 0
-
+		self.__etat = 0
 	#ajoute un element et increment le nombre d'elements
 	#pas de suppression car les groupes ne change pas au cour de la partie
 	def ajout(self, elem):

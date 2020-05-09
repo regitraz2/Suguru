@@ -827,8 +827,15 @@ class Grille:
             self.fram_victory.destroy()
         except:
             pass
-        # detruit toute la grille
-        self.frame2.destroy()
+        # detruit toute la grille si elle est chargée
+        try:
+            self.frame2.destroy()
+        except:
+            pass
+        try:
+            self.frame_load.destroy()
+        except:
+            pass
         self.btn_back.destroy()
         self.btn_solve.destroy()
         self.btn_regles.destroy()

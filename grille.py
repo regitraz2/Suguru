@@ -632,8 +632,8 @@ class Grille:
             for case in gp.getListe():
                 self.setSelected(case)
                 if bool(self.__selected.getEstModif()):
-                    self.__selected.setPoss(
-                        [int(i) for i in range(1, int(gp.getNbElem())+1)])
+                    self.__selected.setPoss([int(i) for i in range(1, int(gp.getNbElem())+1)])
+                    self.__selected.changeVal("")
                 else:
                     self.__selected.setPoss([int(self.__selected.getNum())])
 

@@ -25,8 +25,8 @@ class Grille:
 
         self.btn_retour()  # pour retourner au menu
         self.btn_regles()  # affiche les règles
-        self.btn_solve()  # boutton pour résoudre la grille
-        self.btn_solveInt()  # boutton pour résoudre la grille Int
+        #self.btn_solve()  # boutton pour résoudre la grille
+        #self.btn_solveInt()  # boutton pour résoudre la grille Int
         self.btn_Save()  # boutton pour résoudre la grille Int
 
         self.popup_load(cfg)
@@ -75,6 +75,8 @@ class Grille:
 
 
     def load(self):
+        self.btn_solve()  # boutton pour résoudre la grille
+        self.btn_solveInt()  # boutton pour résoudre la grille Int
         file = open("save.txt", "r")
         grille = file.readlines()
         file.close()
@@ -147,6 +149,8 @@ class Grille:
 
     # charge une grille a partir d'un fichier de config
     def load_config(self, cfg):
+        self.btn_solve()  # boutton pour résoudre la grille
+        self.btn_solveInt()  # boutton pour résoudre la grille Int
         self.frame_load.destroy()
         #print("grille chargée : ")
         #affiche1dim(cfg)
@@ -375,33 +379,23 @@ class Grille:
     def casevoisine(self, case):
         x = int(case.getI())
         y = int(case.getJ())
-
         listecv = []
-
         if bool(self.Existe((x-1), (y-1))):
             listecv.append(self.getCase((x-1), (y-1)))
-
         if bool(self.Existe((x), (y-1))):
             listecv.append(self.getCase((x), (y-1)))
-
         if bool(self.Existe((x+1), (y-1))):
             listecv.append(self.getCase((x+1), (y-1)))
-
         if bool(self.Existe((x-1), (y))):
             listecv.append(self.getCase((x-1), (y)))
-
         if bool(self.Existe((x+1), (y))):
             listecv.append(self.getCase((x+1), (y)))
-
         if bool(self.Existe((x-1), (y+1))):
             listecv.append(self.getCase((x-1), (y+1)))
-
         if bool(self.Existe((x), (y+1))):
             listecv.append(self.getCase((x), (y+1)))
-
         if bool(self.Existe((x+1), (y+1))):
             listecv.append(self.getCase((x+1), (y+1)))
-
         return listecv
 
     # controle
